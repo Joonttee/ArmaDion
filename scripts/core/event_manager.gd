@@ -46,5 +46,11 @@ signal character_creation_requested()
 signal skill_leveled_up(skill_id, new_level)
 signal trait_gained(trait_id)
 
+# Система мутаций
+signal toggle_mutation_display()
+signal mutation_gained(mutation_id)
+signal mutation_lost(mutation_id)
+signal radiation_changed(level)
+
 func _ready():
 	print("[EventManager] Initialized")

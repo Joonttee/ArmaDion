@@ -1,0 +1,11 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Thick skin - armored texture overlay -->
+  <ellipse cx="32" cy="32" rx="28" ry="24" fill="none" stroke="#8B7355" stroke-width="3" opacity="0.6"/>
+  <ellipse cx="32" cy="32" rx="24" ry="20" fill="none" stroke="#A08060" stroke-width="2" opacity="0.4"/>
+  <!-- Scale pattern -->
+  <circle cx="24" cy="28" r="4" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.5"/>
+  <circle cx="40" cy="28" r="4" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.5"/>
+  <circle cx="32" cy="40" r="4" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.5"/>
+  <circle cx="24" cy="44" r="3" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.5"/>
+  <circle cx="40" cy="44" r="3" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.5"/>
+</svg>

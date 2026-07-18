@@ -1,0 +1,12 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Zombie virus - green/gray infection -->
+  <ellipse cx="32" cy="32" rx="26" ry="22" fill="#556B2F" opacity="0.3"/>
+  <!-- Infected veins -->
+  <path d="M20 20 Q24 24, 22 28" fill="none" stroke="#3D4F2F" stroke-width="1.5" opacity="0.6"/>
+  <path d="M44 20 Q40 24, 42 28" fill="none" stroke="#3D4F2F" stroke-width="1.5" opacity="0.6"/>
+  <path d="M28 36 Q32 40, 30 44" fill="none" stroke="#3D4F2F" stroke-width="1" opacity="0.5"/>
+  <!-- Infection spots -->
+  <circle cx="24" cy="24" r="3" fill="#4a5d23" opacity="0.4"/>
+  <circle cx="42" cy="30" r="2.5" fill="#4a5d23" opacity="0.4"/>
+  <circle cx="30" cy="46" r="2" fill="#4a5d23" opacity="0.4"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Extra eye - third eye on forehead -->
+  <ellipse cx="32" cy="12" rx="5" ry="4" fill="#ffddcc" stroke="#cc9999" stroke-width="1"/>
+  <circle cx="32" cy="12" r="2" fill="#663399"/>
+  <circle cx="32" cy="12" r="1" fill="#000000"/>
+  <!-- Mystical glow -->
+  <ellipse cx="32" cy="12" rx="8" ry="6" fill="#9966cc" opacity="0.3"/>
+</svg>

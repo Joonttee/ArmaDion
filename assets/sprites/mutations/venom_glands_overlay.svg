@@ -1,0 +1,10 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Venom glands - green tint on hands/arms -->
+  <ellipse cx="12" cy="36" rx="6" ry="8" fill="#33aa33" opacity="0.5"/>
+  <ellipse cx="52" cy="36" rx="6" ry="8" fill="#33aa33" opacity="0.5"/>
+  <!-- Venom drips -->
+  <circle cx="10" cy="44" r="2" fill="#44cc44" opacity="0.7"/>
+  <circle cx="54" cy="44" r="2" fill="#44cc44" opacity="0.7"/>
+  <circle cx="14" cy="48" r="1.5" fill="#44cc44" opacity="0.6"/>
+  <circle cx="50" cy="48" r="1.5" fill="#44cc44" opacity="0.6"/>
+</svg>

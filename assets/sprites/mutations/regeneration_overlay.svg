@@ -1,0 +1,11 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Regeneration - healing glow effect -->
+  <ellipse cx="32" cy="32" rx="26" ry="22" fill="#ff6666" opacity="0.2"/>
+  <!-- Healing particles -->
+  <circle cx="20" cy="24" r="2" fill="#ff9999" opacity="0.6"/>
+  <circle cx="44" cy="28" r="2" fill="#ff9999" opacity="0.6"/>
+  <circle cx="28" cy="44" r="2" fill="#ff9999" opacity="0.6"/>
+  <circle cx="40" cy="40" r="2" fill="#ff9999" opacity="0.6"/>
+  <circle cx="32" cy="20" r="1.5" fill="#ffaaaa" opacity="0.5"/>
+  <circle cx="36" cy="50" r="1.5" fill="#ffaaaa" opacity="0.5"/>
+</svg>

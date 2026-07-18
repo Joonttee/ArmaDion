@@ -31,6 +31,7 @@ var facing_direction: Vector2 = Vector2.DOWN
 # Система навыков и черт
 var skill_set: SkillSet
 var trait_set: TraitSet
+var mutation_system: Mutation
 var effective_max_health: float
 var effective_max_stamina: float
 var effective_move_speed: float
@@ -41,6 +42,7 @@ var effective_attack_damage: float
 @onready var attack_area: Area2D = $AttackArea
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var mutation_visuals: MutationVisualManager = $MutationVisualManager
 
 func _ready():
 	health = max_health
@@ -50,6 +52,15 @@ func _ready():
 	skill_set = SkillSet.new()
 	trait_set = TraitSet.new()
 	_apply_trait_effects()
+	
+	# Инициализация системы мутаций
+	mutation_system = Mutation.new()
+	_apply_mutation_effects()
+	
+	# Инициализация визуального менеджера мутаций
+	if mutation_visuals:
+		mutation_visuals.set_target_sprite(sprite)
+		mutation_visuals.set_mutation_system(mutation_system)
 	
 	# Установка эффективных характеристик
 	effective_max_health = max_health
@@ -122,6 +133,10 @@ func _handle_input(delta):
 	# Навыки и черты
 	if Input.is_action_just_pressed("skills"):
 		EventManager.emit_signal("toggle_skills_display")
+	
+	# Мутации
+	if Input.is_action_just_pressed("mutations"):
+		EventManager.emit_signal("toggle_mutation_display")
 
 func _handle_survival_stats(delta):
 	# Расход стамины при спринте
@@ -308,3 +323,65 @@ func set_skill_trait_sets(skills: SkillSet, traits: TraitSet):
 	trait_set = traits
 	_apply_trait_effects()
 	print("[Player] Skills and traits set from character creation")
+
+# === СИСТЕМА МУТАЦИЙ ===
+
+# Применить эффекты мутаций к характеристикам
+func _apply_mutation_effects():
+	if not mutation_system:
+		return
+	
+	var effects = mutation_system.get_combined_effects()
+	
+	# Здоровье
+	if effects.has("max_health_bonus"):
+		effective_max_health += effects["max_health_bonus"]
+	
+	# Стамина
+	if effects.has("stamina_bonus"):
+		effective_max_stamina += effects["stamina_bonus"]
+	
+	# Скорость
+	if effects.has("move_speed_bonus"):
+		effective_move_speed += move_speed * effects["move_speed_bonus"]
+		effective_sprint_speed += sprint_speed * effects["move_speed_bonus"]
+	
+	# Урон
+	if effects.has("melee_damage_bonus"):
+		effective_attack_damage += attack_damage * effects["melee_damage_bonus"]
+	
+	# Защита
+	if effects.has("armor_bonus"):
+		# Применяется при получении урона
+		pass
+	
+	print("[Player] Mutation effects applied")
+
+# Получить мутацию
+func gain_mutation(mutation_id: String, source: int = 0) -> bool:
+	if mutation_system:
+		var result = mutation_system.gain_mutation(mutation_id, source)
+		if result:
+			_apply_mutation_effects()
+		return result
+	return false
+
+# Добавить радиацию
+func add_radiation(amount: float):
+	if mutation_system:
+		mutation_system.add_radiation(amount)
+
+# Обработать укус зомби
+func process_bite():
+	if mutation_system:
+		mutation_system.process_bite()
+
+# Получить систему мутаций
+func get_mutation_system() -> Mutation:
+	return mutation_system
+
+# Проверить наличие мутации
+func has_mutation(mutation_id: String) -> bool:
+	if mutation_system:
+		return mutation_system.has_mutation(mutation_id)
+	return false

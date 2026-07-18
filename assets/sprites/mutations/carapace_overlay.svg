@@ -1,0 +1,10 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Carapace - shell on back -->
+  <ellipse cx="32" cy="48" rx="20" ry="12" fill="#5D4e37" opacity="0.8"/>
+  <ellipse cx="32" cy="46" rx="18" ry="10" fill="#6B5344" opacity="0.7"/>
+  <!-- Shell segments -->
+  <path d="M18 48 Q32 38, 46 48" fill="none" stroke="#4a3f2f" stroke-width="2"/>
+  <path d="M22 52 Q32 44, 42 52" fill="none" stroke="#4a3f2f" stroke-width="1.5"/>
+  <!-- Shell shine -->
+  <ellipse cx="28" cy="44" rx="4" ry="2" fill="#8B7355" opacity="0.5"/>
+</svg>

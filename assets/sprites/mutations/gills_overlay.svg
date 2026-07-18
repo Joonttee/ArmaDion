@@ -1,0 +1,9 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gills - on neck sides -->
+  <path d="M14 24 Q16 28, 14 32" fill="none" stroke="#669999" stroke-width="2" opacity="0.7"/>
+  <path d="M12 24 Q14 28, 12 32" fill="none" stroke="#669999" stroke-width="1.5" opacity="0.6"/>
+  <path d="M10 24 Q12 28, 10 32" fill="none" stroke="#669999" stroke-width="1" opacity="0.5"/>
+  <path d="M50 24 Q52 28, 50 32" fill="none" stroke="#669999" stroke-width="2" opacity="0.7"/>
+  <path d="M52 24 Q54 28, 52 32" fill="none" stroke="#669999" stroke-width="1.5" opacity="0.6"/>
+  <path d="M54 24 Q56 28, 54 32" fill="none" stroke="#669999" stroke-width="1" opacity="0.5"/>
+</svg>
