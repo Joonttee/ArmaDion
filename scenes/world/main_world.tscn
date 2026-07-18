@@ -1,0 +1,90 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/world_generator.gd" id="1_world"]
+
+[sub_resource type="RectangleShape2D" id="player_bounds"]
+size = Vector2(2000, 2000)
+
+[node name="MainWorld" type="Node2D"]
+script = ExtResource("1_world")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_set = null
+
+[node name="Buildings" type="Node2D" parent="."]
+
+[node name="Trees" type="Node2D" parent="."]
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="Zombies" type="Node2D" parent="."]
+
+[node name="ZombieSpawner" type="Node2D" parent="."]
+script = ExtResource("res://scripts/zombie/zombie_spawner.gd")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(0, 0)
+script = ExtResource("res://scripts/player/player.gd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("player_bounds")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+
+[node name="AttackArea" type="Area2D" parent="Player"]
+
+[node name="AttackCollision" type="CollisionShape2D" parent="Player/AttackArea"]
+
+[node name="Inventory" type="Node" parent="Player"]
+script = ExtResource("res://scripts/inventory/inventory.gd")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("res://scripts/ui/hud.gd")
+
+[node name="HealthBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 50.0
+
+[node name="StaminaBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 220.0
+offset_bottom = 90.0
+
+[node name="HungerBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = 100.0
+offset_right = 220.0
+offset_bottom = 130.0
+
+[node name="ThirstBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = 140.0
+offset_right = 220.0
+offset_bottom = 170.0
+
+[node name="TimeLabel" type="Label" parent="HUD"]
+offset_left = 1100.0
+offset_top = 20.0
+offset_right = 1260.0
+offset_bottom = 60.0
+
+[node name="DayLabel" type="Label" parent="HUD"]
+offset_left = 1100.0
+offset_top = 70.0
+offset_right = 1260.0
+offset_bottom = 110.0
+
+[node name="EquippedItemLabel" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 680.0
+offset_right = 400.0
+offset_bottom = 720.0
