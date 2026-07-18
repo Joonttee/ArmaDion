@@ -1,0 +1,66 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/skills_display.gd" id="1_display"]
+
+[node name="SkillsDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_display")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+text = "НАВЫКИ И ЧЕРТЫ"
+alignment = 1
+
+[node name="LevelLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 40.0
+offset_bottom = 70.0
+text = "Общий уровень: 0"
+alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 80.0
+offset_right = 780.0
+offset_bottom = 520.0
+
+[node name="SkillsTab" type="ScrollContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkillsContainer" type="VBoxContainer" parent="Panel/TabContainer/SkillsTab"]
+layout_mode = 2
+
+[node name="TraitsTab" type="ScrollContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TraitsContainer" type="VBoxContainer" parent="Panel/TabContainer/TraitsTab"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 540.0
+offset_right = 480.0
+offset_bottom = 580.0
+text = "Закрыть (K)"

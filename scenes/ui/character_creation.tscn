@@ -1,0 +1,112 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_creation.gd" id="1_creation"]
+
+[node name="CharacterCreation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_creation")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 28
+text = "СОЗДАНИЕ ПЕРСОНАЖА"
+alignment = 1
+
+[node name="NameInput" type="LineEdit" parent="Panel"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 50.0
+offset_right = 150.0
+offset_bottom = 90.0
+placeholder_text = "Имя персонажа"
+
+[node name="PointsLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 100.0
+offset_right = 300.0
+offset_bottom = 130.0
+theme_override_font_sizes/font_size = 18
+text = "Очки черт: 6 / 6"
+
+[node name="TabContainer" type="TabContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 140.0
+offset_right = 500.0
+offset_bottom = 480.0
+
+[node name="Positive" type="ScrollContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+
+[node name="Grid" type="VBoxContainer" parent="Panel/TabContainer/Positive"]
+layout_mode = 2
+
+[node name="Negative" type="ScrollContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+
+[node name="Grid" type="VBoxContainer" parent="Panel/TabContainer/Negative"]
+layout_mode = 2
+
+[node name="SelectedLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 140.0
+offset_right = 780.0
+offset_bottom = 170.0
+text = "Выбрано:"
+
+[node name="SelectedTraits" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 180.0
+offset_right = 780.0
+offset_bottom = 400.0
+
+[node name="DescriptionLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 490.0
+offset_right = 500.0
+offset_bottom = 530.0
+text = "Выберите черты для вашего персонажа"
+
+[node name="CreateButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 540.0
+offset_right = 380.0
+offset_bottom = 580.0
+text = "Создать"
+
+[node name="CancelButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 540.0
+offset_right = 530.0
+offset_bottom = 580.0
+text = "Отмена"

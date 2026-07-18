@@ -40,5 +40,11 @@ signal crop_harvested(spot, drops)
 signal crop_died(spot)
 signal toggle_farming_menu()
 
+# Система навыков и черт
+signal toggle_skills_display()
+signal character_creation_requested()
+signal skill_leveled_up(skill_id, new_level)
+signal trait_gained(trait_id)
+
 func _ready():
 	print("[EventManager] Initialized")

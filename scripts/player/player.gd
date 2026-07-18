@@ -28,6 +28,15 @@ var is_attacking: bool = false
 var last_attack_time: float = 0.0
 var facing_direction: Vector2 = Vector2.DOWN
 
+# Система навыков и черт
+var skill_set: SkillSet
+var trait_set: TraitSet
+var effective_max_health: float
+var effective_max_stamina: float
+var effective_move_speed: float
+var effective_sprint_speed: float
+var effective_attack_damage: float
+
 @onready var inventory: Inventory = $Inventory
 @onready var attack_area: Area2D = $AttackArea
 @onready var sprite: Sprite2D = $Sprite2D
@@ -36,8 +45,25 @@ var facing_direction: Vector2 = Vector2.DOWN
 func _ready():
 	health = max_health
 	stamina = max_stamina
+	
+	# Инициализация навыков и черт
+	skill_set = SkillSet.new()
+	trait_set = TraitSet.new()
+	_apply_trait_effects()
+	
+	# Установка эффективных характеристик
+	effective_max_health = max_health
+	effective_max_stamina = max_stamina
+	effective_move_speed = move_speed
+	effective_sprint_speed = sprint_speed
+	effective_attack_damage = attack_damage
+	
+	health = effective_max_health
+	stamina = effective_max_stamina
+	
 	GameManager.player = self
 	print("[Player] Player ready")
+	print("[Player] Traits: %d positive, %d negative" % [trait_set.positive_traits.size(), trait_set.negative_traits.size()])
 
 func _physics_process(delta):
 	if not GameManager.is_playing():
@@ -92,6 +118,10 @@ func _handle_input(delta):
 	# Фермерство
 	if Input.is_action_just_pressed("farm"):
 		EventManager.emit_signal("toggle_farming_menu")
+	
+	# Навыки и черты
+	if Input.is_action_just_pressed("skills"):
+		EventManager.emit_signal("toggle_skills_display")
 
 func _handle_survival_stats(delta):
 	# Расход стамины при спринте
@@ -134,12 +164,18 @@ func _try_attack():
 	if animation_player.has_animation("attack"):
 		animation_player.play("attack")
 	
+	# Прокачка навыка ближнего боя
+	gain_skill_xp("melee", 5.0)
+	gain_skill_xp("athletics", 1.0)
+	
 	# Поиск зомби в зоне атаки
 	var bodies = attack_area.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("zombies"):
-			body.take_damage(attack_damage)
-			print("[Player] Hit zombie for %.1f damage" % attack_damage)
+			# Применяем бонус урона от навыка
+			var damage = effective_attack_damage * (1.0 + get_skill_bonus("melee"))
+			body.take_damage(damage)
+			print("[Player] Hit zombie for %.1f damage" % damage)
 			break
 
 func _try_interact():
@@ -211,3 +247,64 @@ func get_state() -> Dictionary:
 		"thirst": thirst,
 		"position": {"x": position.x, "y": position.y}
 	}
+
+# === СИСТЕМА НАВЫКОВ И ЧЕРТ ===
+
+# Применить эффекты черт к характеристикам
+func _apply_trait_effects():
+	if not trait_set:
+		return
+	
+	var effects = trait_set.get_combined_effects()
+	
+	# Здоровье
+	if effects.has("max_health_bonus"):
+		effective_max_health = max_health + effects["max_health_bonus"]
+	
+	# Стамина
+	if effects.has("stamina_bonus"):
+		effective_max_stamina = max_stamina + effects["stamina_bonus"]
+	
+	# Скорость
+	if effects.has("move_speed_bonus"):
+		var bonus = 1.0 + effects["move_speed_bonus"]
+		effective_move_speed = move_speed * bonus
+		effective_sprint_speed = sprint_speed * bonus
+	
+	# Урон
+	if effects.has("melee_damage_bonus"):
+		var bonus = 1.0 + effects["melee_damage_bonus"]
+		effective_attack_damage = attack_damage * bonus
+	
+	# Слот инвентаря
+	if effects.has("inventory_slots_bonus") and inventory:
+		inventory.max_slots += effects["inventory_slots_bonus"]
+	
+	print("[Player] Trait effects applied. HP: %.0f, Speed: %.0f, Damage: %.1f" % [effective_max_health, effective_move_speed, effective_attack_damage])
+
+# Добавить опыт навыку
+func gain_skill_xp(skill_id: String, amount: float):
+	if not skill_set:
+		return
+	
+	# Применяем множитель опыта от черт
+	var final_amount = amount
+	if trait_set:
+		var effects = trait_set.get_combined_effects()
+		if effects.has("xp_multiplier"):
+			final_amount *= effects["xp_multiplier"]
+	
+	skill_set.add_xp(skill_id, final_amount)
+
+# Получить бонус от навыка
+func get_skill_bonus(skill_id: String) -> float:
+	if skill_set:
+		return skill_set.get_level_bonus(skill_id)
+	return 0.0
+
+# Инициализировать навыки и черты (при создании персонажа)
+func set_skill_trait_sets(skills: SkillSet, traits: TraitSet):
+	skill_set = skills
+	trait_set = traits
+	_apply_trait_effects()
+	print("[Player] Skills and traits set from character creation")
