@@ -2,26 +2,32 @@ extends Control
 class_name CharacterCreation
 
 # CharacterCreation - экран создания персонажа
-# Выбор черт и распределение начальных навыков
+# Выбор профессии, черт и имени
 
-signal character_created(skill_set, trait_set)
+signal character_created(skill_set, trait_set, profession_id)
 signal creation_cancelled
 
+@onready var profession_option: OptionButton = $Panel/ProfessionOption
 @onready var positive_list: VBoxContainer = $Panel/TabContainer/Positive/Scroll/Grid
 @onready var negative_list: VBoxContainer = $Panel/TabContainer/Negative/Scroll/Grid
 @onready var selected_list: VBoxContainer = $Panel/SelectedTraits
 @onready var points_label: Label = $Panel/PointsLabel
 @onready var name_input: LineEdit = $Panel/NameInput
 @onready var description_label: Label = $Panel/DescriptionLabel
+@onready var profession_desc: Label = $Panel/ProfessionDesc
 
 var trait_set: TraitSet
 var skill_set: SkillSet
+var profession: Profession
+var selected_profession: String = "unemployed"
 var trait_checkboxes: Dictionary = {}  # trait_id: CheckBox
 
 func _ready():
 	visible = false
 	trait_set = TraitSet.new()
 	skill_set = SkillSet.new()
+	profession = Profession.new()
+	_setup_profession_list()
 	_populate_trait_lists()
 	_update_points_display()
 	print("[CharacterCreation] Initialized")
@@ -33,6 +39,18 @@ func open():
 func close():
 	visible = false
 	get_tree().paused = false
+
+func _setup_profession_list():
+	profession_option.clear()
+	for prof_id in profession.get_all_professions():
+		var prof = profession.get_profession(prof_id)
+		profession_option.add_item(prof["name"], prof_id)
+	profession_option.connect("item_selected", func(index): _on_profession_selected(index))
+
+func _on_profession_selected(index: int):
+	selected_profession = profession_option.get_item_id(index)
+	var prof = profession.get_profession(selected_profession)
+	profession_desc.text = prof["description"] + "\n\nСпособность: " + prof["special_ability"]
 
 func _populate_trait_lists():
 	# Очищаем списки
@@ -102,7 +120,7 @@ func _show_error(message: String):
 	description_label.modulate = Color.RED
 	await get_tree().create_timer(2.0).timeout
 	description_label.modulate = Color.WHITE
-	description_label.text = "Выберите черты для вашего персонажа"
+	description_label.text = "Выберите профессию и черты для вашего персонажа"
 
 func _on_create_pressed():
 	var char_name = name_input.text.strip_edges()
@@ -110,22 +128,12 @@ func _on_create_pressed():
 		_show_error("Введите имя персонажа!")
 		return
 	
-	# Применяем эффекты черт к навыкам
-	_apply_trait_effects_to_skills()
+	# Применяем профессию
+	profession.apply_profession(selected_profession, skill_set, trait_set)
 	
-	emit_signal("character_created", skill_set, trait_set)
+	emit_signal("character_created", skill_set, trait_set, selected_profession)
 	close()
-	print("[CharacterCreation] Character created: %s" % char_name)
-
-func _apply_trait_effects_to_skills():
-	var effects = trait_set.get_combined_effects()
-	
-	# Начальные бонусы к навыкам от черт
-	if effects.has("starting_skills"):
-		for skill_bonus in effects["starting_skills"]:
-			var skill_id = skill_bonus["skill"]
-			var bonus = skill_bonus["bonus"]
-			skill_set.add_xp(skill_id, bonus)
+	print("[CharacterCreation] Character created: %s (%s)" % [char_name, selected_profession])
 
 func _on_cancel_pressed():
 	emit_signal("creation_cancelled")
