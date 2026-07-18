@@ -60,6 +60,64 @@ func _load_default_recipes():
 	torch.craft_time = 1.5
 	torch.category = "tools"
 	recipes.append(torch)
+	
+	# === СЕМЕНА ===
+	var carrot_seeds = CraftRecipe.new()
+	carrot_seeds.recipe_id = "craft_carrot_seeds"
+	carrot_seeds.result_item_id = "carrot_seeds"
+	carrot_seeds.required_items = {"carrot": 1}
+	carrot_seeds.craft_time = 0.5
+	carrot_seeds.category = "farming"
+	recipes.append(carrot_seeds)
+	
+	var potato_seeds = CraftRecipe.new()
+	potato_seeds.recipe_id = "craft_potato_seeds"
+	potato_seeds.result_item_id = "potato_seeds"
+	potato_seeds.required_items = {"potato": 1}
+	potato_seeds.craft_time = 0.5
+	potato_seeds.category = "farming"
+	recipes.append(potato_seeds)
+	
+	var tomato_seeds = CraftRecipe.new()
+	tomato_seeds.recipe_id = "craft_tomato_seeds"
+	tomato_seeds.result_item_id = "tomato_seeds"
+	tomato_seeds.required_items = {"tomato": 1}
+	tomato_seeds.craft_time = 0.5
+	tomato_seeds.category = "farming"
+	recipes.append(tomato_seeds)
+	
+	# === СТРОИТЕЛЬСТВО ===
+	var wall_wood = CraftRecipe.new()
+	wall_wood.recipe_id = "craft_wall_wood"
+	wall_wood.result_item_id = "wall_wood"
+	wall_wood.required_items = {"wood": 4, "nails": 2}
+	wall_wood.craft_time = 2.0
+	wall_wood.category = "building"
+	recipes.append(wall_wood)
+	
+	var foundation = CraftRecipe.new()
+	foundation.recipe_id = "craft_foundation"
+	foundation.result_item_id = "foundation_item"
+	foundation.required_items = {"wood": 5, "nails": 3, "metal": 1}
+	foundation.craft_time = 3.0
+	foundation.category = "building"
+	recipes.append(foundation)
+	
+	var door = CraftRecipe.new()
+	door.recipe_id = "craft_door"
+	door.result_item_id = "door_item"
+	door.required_items = {"wood": 3, "nails": 2, "metal": 1}
+	door.craft_time = 2.0
+	door.category = "building"
+	recipes.append(door)
+	
+	var storage = CraftRecipe.new()
+	storage.recipe_id = "craft_storage"
+	storage.result_item_id = "storage_box"
+	storage.required_items = {"wood": 4, "nails": 2}
+	storage.craft_time = 2.0
+	storage.category = "building"
+	recipes.append(storage)
 
 func can_craft(recipe: CraftRecipe, inventory: Inventory) -> bool:
 	for item_id in recipe.required_items:

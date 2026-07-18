@@ -165,6 +165,157 @@ func _load_default_items():
 		"item_type": Item.ItemType.TOOL,
 		"damage": 5.0
 	})
+	
+	# === СЕМЕНА ===
+	_add_item("carrot_seeds", {
+		"item_name": "Семена моркови",
+		"description": "Семена для посадки моркови. Быстро растёт.",
+		"weight": 0.1,
+		"item_type": Item.ItemType.MISC,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("potato_seeds", {
+		"item_name": "Семена картофеля",
+		"description": "Семена для посадки картофеля. Высокий урожай.",
+		"weight": 0.1,
+		"item_type": Item.ItemType.MISC,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("tomato_seeds", {
+		"item_name": "Семена помидоров",
+		"description": "Семена для посадки помидоров. Утоляют жажду.",
+		"weight": 0.1,
+		"item_type": Item.ItemType.MISC,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("corn_seeds", {
+		"item_name": "Семена кукурузы",
+		"description": "Семена для посадки кукурузы. Очень питательна.",
+		"weight": 0.1,
+		"item_type": Item.ItemType.MISC,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("wheat_seeds", {
+		"item_name": "Семена пшеницы",
+		"description": "Семена для посадки пшеницы. Для выпечки хлеба.",
+		"weight": 0.1,
+		"item_type": Item.ItemType.MISC,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	# === УРОЖАЙ ===
+	_add_item("carrot", {
+		"item_name": "Морковь",
+		"description": "Свежая морковь. Утоляет голод.",
+		"weight": 0.2,
+		"item_type": Item.ItemType.FOOD,
+		"consumable": true,
+		"hunger_recovery": 20.0,
+		"thirst_recovery": 5.0,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("potato", {
+		"item_name": "Картофель",
+		"description": "Сырой картофель. Лучше приготовить.",
+		"weight": 0.3,
+		"item_type": Item.ItemType.FOOD,
+		"consumable": true,
+		"hunger_recovery": 15.0,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("tomato", {
+		"item_name": "Помидор",
+		"description": "Сочный помидор. Утоляет жажду.",
+		"weight": 0.2,
+		"item_type": Item.ItemType.FOOD,
+		"consumable": true,
+		"hunger_recovery": 10.0,
+		"thirst_recovery": 20.0,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("corn", {
+		"item_name": "Кукуруза",
+		"description": "Початок кукурузы. Очень питательна.",
+		"weight": 0.3,
+		"item_type": Item.ItemType.FOOD,
+		"consumable": true,
+		"hunger_recovery": 30.0,
+		"thirst_recovery": 5.0,
+		"stackable": true,
+		"max_stack": 20
+	})
+	
+	_add_item("wheat", {
+		"item_name": "Пшеница",
+		"description": "Колос пшеницы. Можно сделать муку.",
+		"weight": 0.2,
+		"item_type": Item.ItemType.FOOD,
+		"consumable": true,
+		"hunger_recovery": 10.0,
+		"stackable": true,
+		"max_stack": 30
+	})
+	
+	# === СТРОИТЕЛЬНЫЕ МАТЕРИАЛЫ ===
+	_add_item("wall_wood", {
+		"item_name": "Деревянная стена",
+		"description": "Планки для строительства деревянной стены.",
+		"weight": 5.0,
+		"item_type": Item.ItemType.MATERIAL,
+		"stackable": true,
+		"max_stack": 10
+	})
+	
+	_add_item("wall_metal", {
+		"item_name": "Металлическая стена",
+		"description": "Металлические листы для прочной стены.",
+		"weight": 8.0,
+		"item_type": Item.ItemType.MATERIAL,
+		"stackable": true,
+		"max_stack": 10
+	})
+	
+	_add_item("foundation_item", {
+		"item_name": "Фундамент",
+		"description": "Основа для строительства базы.",
+		"weight": 6.0,
+		"item_type": Item.ItemType.MATERIAL,
+		"stackable": true,
+		"max_stack": 10
+	})
+	
+	_add_item("door_item", {
+		"item_name": "Дверь",
+		"description": "Дверь для входа в базу.",
+		"weight": 4.0,
+		"item_type": Item.ItemType.MATERIAL,
+		"stackable": true,
+		"max_stack": 5
+	})
+	
+	_add_item("storage_box", {
+		"item_name": "Сундук",
+		"description": "Хранилище для предметов.",
+		"weight": 3.0,
+		"item_type": Item.ItemType.MATERIAL,
+		"stackable": true,
+		"max_stack": 5
+	})
 
 func _add_item(id: String, data: Dictionary):
 	var item = Item.new()

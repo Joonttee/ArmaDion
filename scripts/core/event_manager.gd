@@ -29,6 +29,16 @@ signal item_crafted(item_id)
 # События зданий
 signal building_placed(building)
 signal building_destroyed(building)
+signal open_storage(storage)
+signal toggle_building_menu()
+signal build_piece_requested(piece_type)
+
+# События фермерства
+signal crop_planted(spot, crop_type)
+signal crop_grown(spot)
+signal crop_harvested(spot, drops)
+signal crop_died(spot)
+signal toggle_farming_menu()
 
 func _ready():
 	print("[EventManager] Initialized")

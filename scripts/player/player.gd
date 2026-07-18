@@ -84,6 +84,14 @@ func _handle_input(delta):
 	# Крафт
 	if Input.is_action_just_pressed("craft"):
 		EventManager.emit_signal("toggle_crafting")
+	
+	# Строительство
+	if Input.is_action_just_pressed("build"):
+		EventManager.emit_signal("toggle_building_menu")
+	
+	# Фермерство
+	if Input.is_action_just_pressed("farm"):
+		EventManager.emit_signal("toggle_farming_menu")
 
 func _handle_survival_stats(delta):
 	# Расход стамины при спринте

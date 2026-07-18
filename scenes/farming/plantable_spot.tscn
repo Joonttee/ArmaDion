@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/farming/plantable_spot.gd" id="1_spot"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_spot"]
+size = Vector2(32, 32)
+
+[node name="PlantableSpot" type="StaticBody2D"]
+script = ExtResource("1_spot")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_spot")
+
+[node name="WaterBar" type="ProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -24.0
+offset_right = 16.0
+offset_bottom = -16.0
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="GrowthTimer" type="Timer" parent="."]
