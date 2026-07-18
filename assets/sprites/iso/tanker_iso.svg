@@ -1,0 +1,17 @@
+<svg width="96" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tanker body -->
+  <rect x="8" y="20" width="80" height="28" fill="#7f8c8d"/>
+  <!-- Tank cylinder -->
+  <ellipse cx="48" cy="34" rx="36" ry="12" fill="#95a5a6"/>
+  <ellipse cx="16" cy="34" rx="8" ry="12" fill="#bdc3c7"/>
+  <!-- Cabin -->
+  <rect x="68" y="24" width="20" height="24" fill="#5dade2"/>
+  <rect x="72" y="28" width="12" height="10" fill="#2c3e50"/>
+  <!-- Wheels -->
+  <ellipse cx="20" cy="52" rx="6" ry="5" fill="#2c3e50"/>
+  <ellipse cx="40" cy="52" rx="6" ry="5" fill="#2c3e50"/>
+  <ellipse cx="60" cy="52" rx="6" ry="5" fill="#2c3e50"/>
+  <ellipse cx="80" cy="52" rx="6" ry="5" fill="#2c3e50"/>
+  <!-- Hazard sign -->
+  <polygon points="44,18 48,12 52,18" fill="#f39c12"/>
+</svg>

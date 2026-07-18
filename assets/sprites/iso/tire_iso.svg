@@ -1,0 +1,19 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tire outer -->
+  <circle cx="16" cy="16" r="14" fill="#2c3e50"/>
+  <!-- Tire tread -->
+  <circle cx="16" cy="16" r="12" fill="none" fill="#34495e" stroke="#34495e" stroke-width="2"/>
+  <!-- Tread pattern -->
+  <line x1="8" y1="8" x2="12" y2="12" stroke="#1a252f" stroke-width="2"/>
+  <line x1="24" y1="8" x2="20" y2="12" stroke="#1a252f" stroke-width="2"/>
+  <line x1="8" y1="24" x2="12" y2="20" stroke="#1a252f" stroke-width="2"/>
+  <line x1="24" y1="24" x2="20" y2="20" stroke="#1a252f" stroke-width="2"/>
+  <!-- Hub -->
+  <circle cx="16" cy="16" r="6" fill="#7f8c8d"/>
+  <circle cx="16" cy="16" r="4" fill="#95a5a6"/>
+  <!-- Bolts -->
+  <circle cx="16" cy="11" r="1" fill="#bdc3c7"/>
+  <circle cx="16" cy="21" r="1" fill="#bdc3c7"/>
+  <circle cx="11" cy="16" r="1" fill="#bdc3c7"/>
+  <circle cx="21" cy="16" r="1" fill="#bdc3c7"/>
+</svg>
