@@ -1,0 +1,13 @@
+<svg width="64" height="96" xmlns="http://www.w3.org/2000/svg">
+  <!-- Trunk -->
+  <rect x="24" y="40" width="16" height="40" fill="#5D3A1A"/>
+  <!-- Branches -->
+  <line x1="32" y1="40" x2="16" y2="20" stroke="#5D3A1A" stroke-width="4"/>
+  <line x1="32" y1="40" x2="48" y2="20" stroke="#5D3A1A" stroke-width="4"/>
+  <line x1="32" y1="30" x2="20" y2="10" stroke="#5D3A1A" stroke-width="3"/>
+  <line x1="32" y1="30" x2="44" y2="10" stroke="#5D3A1A" stroke-width="3"/>
+  <line x1="16" y1="20" x2="8" y2="8" stroke="#5D3A1A" stroke-width="2"/>
+  <line x1="48" y1="20" x2="56" y2="8" stroke="#5D3A1A" stroke-width="2"/>
+  <!-- Roots -->
+  <ellipse cx="32" cy="84" rx="20" ry="8" fill="#3D2510"/>
+</svg>

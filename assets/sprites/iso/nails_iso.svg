@@ -1,0 +1,11 @@
+<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Nail box -->
+  <rect x="4" y="8" width="16" height="12" fill="#8B4513"/>
+  <rect x="4" y="8" width="16" height="3" fill="#A0522D"/>
+  <!-- Nails visible -->
+  <line x1="8" y1="14" x2="8" y2="18" stroke="#95a5a6" stroke-width="1"/>
+  <line x1="12" y1="14" x2="12" y2="18" stroke="#95a5a6" stroke-width="1"/>
+  <line x1="16" y1="14" x2="16" y2="18" stroke="#95a5a6" stroke-width="1"/>
+  <!-- Label -->
+  <rect x="6" y="10" width="12" height="4" fill="#ecf0f1"/>
+</svg>

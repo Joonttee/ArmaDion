@@ -1,0 +1,17 @@
+<svg width="64" height="48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wall planks -->
+  <rect x="4" y="8" width="56" height="36" fill="#8B4513"/>
+  <!-- Plank lines -->
+  <line x1="4" y1="16" x2="60" y2="16" stroke="#5D3A1A" stroke-width="1"/>
+  <line x1="4" y1="24" x2="60" y2="24" stroke="#5D3A1A" stroke-width="1"/>
+  <line x1="4" y1="32" x2="60" y2="32" stroke="#5D3A1A" stroke-width="1"/>
+  <line x1="4" y1="40" x2="60" y2="40" stroke="#5D3A1A" stroke-width="1"/>
+  <!-- Vertical posts -->
+  <rect x="0" y="4" width="4" height="44" fill="#5D3A1A"/>
+  <rect x="60" y="4" width="4" height="44" fill="#5D3A1A"/>
+  <!-- Nails -->
+  <circle cx="10" cy="12" r="1" fill="#7f8c8d"/>
+  <circle cx="54" cy="12" r="1" fill="#7f8c8d"/>
+  <circle cx="10" cy="36" r="1" fill="#7f8c8d"/>
+  <circle cx="54" cy="36" r="1" fill="#7f8c8d"/>
+</svg>
