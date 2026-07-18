@@ -1,0 +1,14 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Forest floor base -->
+  <rect x="0" y="0" width="64" height="64" fill="#3d6b3d"/>
+  <!-- Leaf litter -->
+  <ellipse cx="16" cy="20" rx="8" ry="4" fill="#4a7c4a" opacity="0.7"/>
+  <ellipse cx="48" cy="32" rx="10" ry="5" fill="#2d5a2d" opacity="0.6"/>
+  <ellipse cx="24" cy="48" rx="6" ry="3" fill="#4a7c4a" opacity="0.5"/>
+  <!-- Small plants -->
+  <line x1="36" y1="16" x2="36" y2="24" stroke="#5d8a5d" stroke-width="2"/>
+  <line x1="12" y1="40" x2="12" y2="48" stroke="#5d8a5d" stroke-width="2"/>
+  <!-- Fallen leaves -->
+  <ellipse cx="44" cy="16" rx="3" ry="2" fill="#8B4513" opacity="0.5"/>
+  <ellipse cx="20" cy="36" rx="2" ry="1.5" fill="#8B4513" opacity="0.5"/>
+</svg>

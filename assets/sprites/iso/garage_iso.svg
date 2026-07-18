@@ -1,0 +1,18 @@
+<svg width="128" height="96" xmlns="http://www.w3.org/2000/svg">
+  <!-- Building base -->
+  <rect x="16" y="40" width="96" height="56" fill="#5d4e37"/>
+  <!-- Roof -->
+  <polygon points="12,40 64,8 116,40" fill="#4a3f2f"/>
+  <!-- Garage door -->
+  <rect x="40" y="50" width="48" height="46" fill="#3d3426"/>
+  <line x1="40" y1="60" x2="88" y2="60" stroke="#2d261a" stroke-width="2"/>
+  <line x1="40" y1="72" x2="88" y2="72" stroke="#2d261a" stroke-width="2"/>
+  <line x1="40" y1="84" x2="88" y2="84" stroke="#2d261a" stroke-width="2"/>
+  <!-- Side door -->
+  <rect x="20" y="60" width="16" height="36" fill="#8B4513"/>
+  <!-- Window -->
+  <rect x="96" y="52" width="12" height="12" fill="#3498db" opacity="0.6"/>
+  <!-- Sign -->
+  <rect x="44" y="24" width="40" height="10" fill="#f39c12"/>
+  <text x="64" y="33" font-family="Arial" font-size="8" fill="#2c3e50" text-anchor="middle">GARAGE</text>
+</svg>
