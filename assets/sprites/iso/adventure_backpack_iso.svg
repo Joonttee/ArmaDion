@@ -1,0 +1,9 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Adventure backpack -->
+  <rect x="2" y="0" width="28" height="30" rx="4" fill="#4B0082"/>
+  <rect x="4" y="2" width="24" height="12" fill="#6A0DAD"/>
+  <rect x="4" y="16" width="24" height="12" fill="#6A0DAD"/>
+  <rect x="8" y="28" width="16" height="4" fill="#3D0066"/>
+  <rect x="14" y="0" width="4" height="6" fill="#8A2BE2"/>
+  <circle cx="16" cy="8" r="4" fill="#FFD700"/>
+</svg>

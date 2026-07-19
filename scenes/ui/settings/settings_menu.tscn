@@ -1,0 +1,142 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/settings/settings_menu.gd" id="1_settings"]
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_settings")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+text = "НАСТРОЙКИ"
+alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="Panel"]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 800.0
+offset_bottom = 500.0
+
+[node name="Graphics" type="VBoxContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+
+[node name="ResolutionLabel" type="Label" parent="Panel/TabContainer/Graphics"]
+layout_mode = 2
+text = "Разрешение:"
+
+[node name="ResolutionOption" type="OptionButton" parent="Panel/TabContainer/Graphics"]
+layout_mode = 2
+item_count = 4
+text = "1280x720"
+
+[node name="FullscreenCheck" type="CheckBox" parent="Panel/TabContainer/Graphics"]
+layout_mode = 2
+text = "Полноэкранный режим"
+
+[node name="VsyncCheck" type="CheckBox" parent="Panel/TabContainer/Graphics"]
+layout_mode = 2
+text = "Вертикальная синхронизация"
+
+[node name="Audio" type="VBoxContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+
+[node name="MasterVolumeLabel" type="Label" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+text = "Общая громкость:"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.8
+
+[node name="MusicVolumeLabel" type="Label" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+text = "Громкость музыки:"
+
+[node name="MusicVolumeSlider" type="HSlider" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.7
+
+[node name="SFXVolumeLabel" type="Label" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+text = "Громкость эффектов:"
+
+[node name="SFXVolumeSlider" type="HSlider" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.8
+
+[node name="AmbientVolumeLabel" type="Label" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+text = "Громкость эмбиента:"
+
+[node name="AmbientVolumeSlider" type="HSlider" parent="Panel/TabContainer/Audio"]
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.5
+
+[node name="Gameplay" type="VBoxContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+
+[node name="DifficultyLabel" type="Label" parent="Panel/TabContainer/Gameplay"]
+layout_mode = 2
+text = "Сложность:"
+
+[node name="DifficultyOption" type="OptionButton" parent="Panel/TabContainer/Gameplay"]
+layout_mode = 2
+item_count = 4
+text = "Нормально"
+
+[node name="AutoSaveCheck" type="CheckBox" parent="Panel/TabContainer/Gameplay"]
+layout_mode = 2
+text = "Автосохранение"
+
+[node name="ShowHUDCheck" type="CheckBox" parent="Panel/TabContainer/Gameplay"]
+layout_mode = 2
+text = "Показывать HUD"
+
+[node name="ApplyButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 520.0
+offset_right = 350.0
+offset_bottom = 560.0
+text = "Применить"
+
+[node name="CancelButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 370.0
+offset_top = 520.0
+offset_right = 520.0
+offset_bottom = 560.0
+text = "Отмена"
+
+[node name="ResetButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 540.0
+offset_top = 520.0
+offset_right = 690.0
+offset_bottom = 560.0
+text = "Сброс"

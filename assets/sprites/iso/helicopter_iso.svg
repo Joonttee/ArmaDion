@@ -1,0 +1,17 @@
+<svg width="96" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Helicopter body -->
+  <ellipse cx="48" cy="32" rx="36" ry="12" fill="#2c3e50"/>
+  <!-- Cockpit -->
+  <ellipse cx="24" cy="30" rx="16" ry="10" fill="#34495e"/>
+  <ellipse cx="20" cy="28" rx="8" ry="6" fill="#3498db" opacity="0.6"/>
+  <!-- Tail -->
+  <rect x="60" y="28" width="28" height="8" fill="#2c3e50"/>
+  <polygon points="88,32 96,28 96,36" fill="#2c3e50"/>
+  <!-- Rotor -->
+  <ellipse cx="48" cy="16" rx="40" ry="4" fill="#7f8c8d" opacity="0.5"/>
+  <rect x="46" y="12" width="4" height="8" fill="#95a5a6"/>
+  <!-- Skids -->
+  <rect x="20" y="44" width="56" height="2" fill="#7f8c8d"/>
+  <rect x="24" y="40" width="2" height="6" fill="#7f8c8d"/>
+  <rect x="70" y="40" width="2" height="6" fill="#7f8c8d"/>
+</svg>

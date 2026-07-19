@@ -1,0 +1,7 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Suitcase -->
+  <rect x="4" y="8" width="24" height="16" rx="2" fill="#4A4A4A"/>
+  <rect x="6" y="10" width="20" height="12" fill="#5C5C5C"/>
+  <rect x="10" y="4" width="12" height="6" rx="1" fill="#3D3D3D"/>
+  <rect x="12" y="14" width="8" height="4" rx="1" fill="#FFD700"/>
+</svg>

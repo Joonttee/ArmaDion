@@ -1,5 +1,4 @@
 extends Node
-class_name FarmingManager
 
 # FarmingManager - менеджер фермерства
 # Управляет всеми грядками и ростом растений
@@ -71,13 +70,13 @@ func create_farm_plot(position: Vector2, size: int = 4) -> Node2D:
 	
 	return plot
 
-func serialize() -> Array:
+func serialize_data() -> Array:
 	var data = []
 	for spot in plantable_spots:
 		data.append(spot.get_state())
 	return data
 
-func deserialize(data: Array):
+func deserialize_data(data: Array):
 	for i in range(data.size()):
 		if i < plantable_spots.size():
 			plantable_spots[i].set_state(data[i])

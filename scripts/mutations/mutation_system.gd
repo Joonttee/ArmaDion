@@ -1,604 +1,402 @@
-extends Resource
-class_name Mutation
+extends Node
+class_name MutationSystem
 
-# Mutation - мутация персонажа
-# Может быть положительной или отрицательной
-# Вызывается радиацией, укусами, предметами
+# MutationSystem - система мутаций (как в CDDA)
+# Пороги мутаций, трансформации, ветки
 
 signal mutation_gained(mutation_id)
 signal mutation_lost(mutation_id)
-signal mutation_stage_changed(mutation_id, new_stage)
+signal threshold_reached(threshold_id)
 
-# Типы мутаций
-enum Type { POSITIVE, NEGATIVE, MIXED }
-# Категории мутаций
-enum Category { PHYSICAL, MENTAL, PSYCHIC, INSTABILITY }
-# Источники мутаций
-enum Source { RADIATION, BITE, ITEM, ENVIRONMENT, RITUAL }
+enum MutationCategory { PHYSICAL, MENTAL, BEAST, PLANT, FISH, INSECT, BIRD, REPTILE, MEDICAL, CHIMERIC }
 
-# Определения мутаций
-const MUTATION_DEFINITIONS = {
-	# ============ ФИЗИЧЕСКИЕ МУТАЦИИ (ПОЗИТИВНЫЕ) ============
-	
+# Активные мутации
+var mutations: Array[String] = []
+var thresholds_reached: Array[String] = []
+
+# Очки мутации
+var mutation_points: float = 0.0
+var mutation_threshold: float = 100.0
+
+# Каталог мутаций
+const MUTATION_CATALOG = {
+	# === ФИЗИЧЕСКИЕ ===
 	"thick_skin": {
 		"name": "Грубая кожа",
-		"description": "Кожа становится толще и прочнее. +20% к защите от физического урона.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"armor_bonus": 0.1, "bite_resist": 0.15},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.RADIATION, Source.ENVIRONMENT],
-		"icon": ""
+		"category": MutationCategory.PHYSICAL,
+		"points": 10,
+		"effects": {"armor": 5, "beauty": -10},
+		"description": "+5 броня, -10 привлекательность"
+	},
+	"tough": {
+		"name": "Крепкий",
+		"category": MutationCategory.PHYSICAL,
+		"points": 15,
+		"effects": {"max_health": 20, "pain_resist": 0.2},
+		"description": "+20 здоровья, +20% сопротивление боли"
+	},
+	"strong": {
+		"name": "Сильный",
+		"category": MutationCategory.PHYSICAL,
+		"points": 20,
+		"effects": {"strength": 4, "melee_damage": 0.15},
+		"description": "+4 сила, +15% урон"
+	},
+	"dexterous": {
+		"name": "Ловкий",
+		"category": MutationCategory.PHYSICAL,
+		"points": 15,
+		"effects": {"dexterity": 4, "attack_speed": 0.1},
+		"description": "+4 ловкость, +10% скорость атаки"
+	},
+	"fast_metabolism": {
+		"name": "Быстрый метаболизм",
+		"category": MutationCategory.PHYSICAL,
+		"points": 10,
+		"effects": {"stamina_regen": 0.3, "hunger_rate": 0.3},
+		"description": "+30% регенерация, +30% голод"
+	},
+	"high_pain_threshold": {
+		"name": "Высокий болевой порог",
+		"category": MutationCategory.PHYSICAL,
+		"points": 25,
+		"effects": {"pain_tolerance": 0.4, "stress_resist": 0.2},
+		"description": "+40% терпимость к боли"
 	},
 	
-	"night_vision_mut": {
+	# === ЗВЕРИНЫЕ ===
+	"claws": {
+		"name": "Когти",
+		"category": MutationCategory.BEAST,
+		"points": 20,
+		"effects": {"unarmed_damage": 10, "climb_bonus": 0.3},
+		"description": "+10 урон без оружия, +30% лазание"
+	},
+	"fangs": {
+		"name": "Клыки",
+		"category": MutationCategory.BEAST,
+		"points": 15,
+		"effects": {"bite_damage": 15, "bleed_chance": 0.2},
+		"description": "+15 урон укусом, 20% кровотечение"
+	},
+	"night_vision_beast": {
 		"name": "Ночное зрение",
-		"description": "Глаза адаптируются к темноте. Видите в темноте всё лучше.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"night_vision_bonus": 0.3, "dark_accuracy": 0.1},
-		"requirements": {"mutation_resistance": 1},
-		"sources": [Source.RADIATION, Source.ITEM],
-		"icon": ""
+		"category": MutationCategory.BEAST,
+		"points": 25,
+		"effects": {"night_vision": 1, "dark_visibility": 0.9},
+		"description": "Видите в темноте"
+	},
+	"predator_senses": {
+		"name": "Чухи хищника",
+		"category": MutationCategory.BEAST,
+		"points": 30,
+		"effects": {"hearing_range": 0.5, "smell_tracking": 1},
+		"description": "+50% слух, отслеживание по запаху"
+	},
+	"thick_fur": {
+		"name": "Густой мех",
+		"category": MutationCategory.BEAST,
+		"points": 20,
+		"effects": {"cold_resist": 0.4, "armor": 3, "heat_vulnerability": 0.2},
+		"description": "+40% холод, +3 броня, -20% жара"
+	},
+	"padded_feet": {
+		"name": "Мягкие лапы",
+		"category": MutationCategory.BEAST,
+		"points": 15,
+		"effects": {"noise_reduction": 0.4, "move_speed": 0.1},
+		"description": "-40% шума, +10% скорость"
 	},
 	
-	"regeneration": {
+	# === РАСТИТЕЛЬНЫЕ ===
+	"photosynthesis": {
+		"name": "Фотосинтез",
+		"category": MutationCategory.PLANT,
+		"points": 30,
+		"effects": {"sun_nutrition": 0.2, "hunger_rate": -0.3},
+		"description": "Питание от солнца, -30% голод"
+	},
+	"thorns": {
+		"name": "Шипы",
+		"category": MutationCategory.PLANT,
+		"points": 20,
+		"effects": {"thorn_damage": 5, "armor": 2},
+		"description": "5 урона при касании, +2 броня"
+	},
+	"bark_skin": {
+		"name": "Коровая кожа",
+		"category": MutationCategory.PLANT,
+		"points": 25,
+		"effects": {"armor": 8, "fire_vulnerability": 0.3},
+		"description": "+8 броня, -30% огнестойкость"
+	},
+	"vine_limbs": {
+		"name": "Лозовые конечности",
+		"category": MutationCategory.PLANT,
+		"points": 35,
+		"effects": {"reach": 2, "grapple_range": 3},
+		"description": "+2 досягаемость, +3 захват"
+	},
+	"spore_cloud": {
+		"name": "Споровое облако",
+		"category": MutationCategory.PLANT,
+		"points": 40,
+		"effects": {"spore_damage": 3, "spore_range": 2},
+		"description": "Споры наносят 3 урона в радиусе 2"
+	},
+	"root_feet": {
+		"name": "Корневые ноги",
+		"category": MutationCategory.PLANT,
+		"points": 30,
+		"effects": {"stability": 0.5, "move_speed": -0.2, "health_regen_ground": 1},
+		"description": "+50% устойчивость, -20% скорость, реген на земле"
+	},
+	
+	# === ПТИЧЬИ ===
+	"wings": {
+		"name": "Крылья",
+		"category": MutationCategory.BIRD,
+		"points": 50,
+		"effects": {"flight": 1, "fall_damage": -1.0, "move_speed": 0.2},
+		"description": "Полёт, нет урона от падения"
+	},
+	"hollow_bones": {
+		"name": "Полые кости",
+		"category": MutationCategory.BIRD,
+		"points": 25,
+		"effects": {"weight": -10, "move_speed": 0.15, "fracture_risk": 0.2},
+		"description": "-10 вес, +15% скорость, +20% переломы"
+	},
+	"sharp_vision": {
+		"name": "Острое зрение",
+		"category": MutationCategory.BIRD,
+		"points": 20,
+		"effects": {"view_range": 0.4, "accuracy": 0.15},
+		"description": "+40% обзор, +15% точность"
+	},
+	"talons": {
+		"name": "Когти",
+		"category": MutationCategory.BIRD,
+		"points": 30,
+		"effects": {"unarmed_damage": 12, "bleed_chance": 0.25},
+		"description": "+12 урон, 25% кровотечение"
+	},
+	
+	# === РЕПТИЛЬИ ===
+	"cold_blooded": {
+		"name": "Холоднокровный",
+		"category": MutationCategory.REPTILE,
+		"points": 20,
+		"effects": {"heat_vulnerability": 0.3, "cold_resist": 0.5, "food_efficiency": 0.2},
+		"description": "+50% холод, -30% жара, +20% еда"
+	},
+	"scales": {
+		"name": "Чешуя",
+		"category": MutationCategory.REPTILE,
+		"points": 25,
+		"effects": {"armor": 6, "cut_resist": 0.3},
+		"description": "+6 броня, +30% сопротивление порезам"
+	},
+	"regeneration_reptile": {
 		"name": "Регенерация",
-		"description": "Раны заживают быстрее. Восстановление здоровья со временем.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 4,
-		"effects_per_stage": {"regen_rate": 0.5, "heal_bonus": 0.1},
-		"requirements": {"mutation_resistance": 3},
-		"sources": [Source.BITE, Source.ITEM],
-		"icon": ""
+		"category": MutationCategory.REPTILE,
+		"points": 40,
+		"effects": {"health_regen": 3, "wound_healing": 0.8},
+		"description": "+3 реген здоровья, +80% заживление"
+	},
+	"poison_bite": {
+		"name": "Ядовитый укус",
+		"category": MutationCategory.REPTILE,
+		"points": 35,
+		"effects": {"poison_damage": 5, "poison_chance": 0.3},
+		"description": "5 урона ядом, 30% шанс"
+	},
+	"heat_sensors": {
+		"name": "Тепловые сенсоры",
+		"category": MutationCategory.REPTILE,
+		"points": 30,
+		"effects": {"heat_detection": 1, "night_vision": 0.5},
+		"description": "Обнаружение тепла, +50% ночное зрение"
 	},
 	
-	"extra_fast": {
-		"name": "Скорость",
-		"description": "Мышцы становятся быстрее. +15% к скорости движения за стадию.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"move_speed_bonus": 0.15, "attack_speed": 0.1},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.RADIATION, Source.ENVIRONMENT],
-		"icon": ""
+	# === НАСЕКОМЫЕ ===
+	"chitin_armor": {
+		"name": "Хитиновая броня",
+		"category": MutationCategory.INSECT,
+		"points": 30,
+		"effects": {"armor": 10, "weight": 5, "noise": 0.1},
+		"description": "+10 броня, +5 вес, +10% шум"
+	},
+	"compound_eyes": {
+		"name": "Фасеточные глаза",
+		"category": MutationCategory.INSECT,
+		"points": 25,
+		"effects": {"view_range": 0.3, "peripheral_vision": 1, "beauty": -20},
+		"description": "+30% обзор, периферическое зрение, -20 красота"
+	},
+	"antennae": {
+		"name": "Усики",
+		"category": MutationCategory.INSECT,
+		"points": 20,
+		"effects": {"vibration_detection": 1, "smell_bonus": 0.5},
+		"description": "Обнаружение вибраций, +50% обоняние"
+	},
+	"mandibles": {
+		"name": "Жвалы",
+		"category": MutationCategory.INSECT,
+		"points": 25,
+		"effects": {"bite_damage": 18, "armor_penetration": 0.2},
+		"description": "+18 урон укусом, +20% пробив брони"
+	},
+	"web_spinneret": {
+		"name": "Прядильный орган",
+		"category": MutationCategory.INSECT,
+		"points": 45,
+		"effects": {"web_shooting": 1, "web_range": 3, "web_damage": 8},
+		"description": "Стреляет паутиной на 3 тайла, 8 урона"
 	},
 	
-	"strong_mut": {
-		"name": "Сила",
-		"description": "Мускулатура растёт. +20% к урону в ближнем бою за стадию.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"melee_damage_bonus": 0.2, "carry_weight": 0.15},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.RADIATION, Source.ITEM],
-		"icon": ""
+	# === МЕДИЦИНСКИЕ ===
+	"rapid_healing": {
+		"name": "Быстрое заживление",
+		"category": MutationCategory.MEDICAL,
+		"points": 30,
+		"effects": {"wound_healing": 1.0, "infection_resist": 0.5},
+		"description": "+100% заживление, +50% сопротивление инфекции"
 	},
-	
-	"tough_mut": {
-		"name": "Живучесть",
-		"description": "Организм становится выносливее. +20 макс. здоровья за стадию.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 4,
-		"effects_per_stage": {"max_health_bonus": 20, "stamina_bonus": 10},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
-	},
-	
-	"acute_hearing": {
-		"name": "Острый слух",
-		"description": "Слух обостряется. Слышите врагов заранее.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"hearing_range": 0.3, "detect_bonus": 0.2},
-		"requirements": {"mutation_resistance": 1},
-		"sources": [Source.RADIATION, Source.ENVIRONMENT],
-		"icon": ""
-	},
-	
-	"eagle_eye_mut": {
-		"name": "Орлиный глаз",
-		"description": "Зрение улучшается. +15% к точности стрельбы за стадию.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"accuracy_bonus": 0.15, "crit_chance": 0.05},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.RADIATION, Source.ITEM],
-		"icon": ""
-	},
-	
 	"poison_immunity": {
 		"name": "Иммунитет к ядам",
-		"description": "Организм адаптируется к токсинам. Сопротивление ядам и отравлениям.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"poison_resist": 0.5, "food_poison_resist": 0.3},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.ENVIRONMENT, Source.ITEM],
-		"icon": ""
+		"category": MutationCategory.MEDICAL,
+		"points": 25,
+		"effects": {"poison_resist": 1.0, "food_poison_resist": 0.8},
+		"description": "Полный иммунитет к ядам"
 	},
-	
-	"radiation_resistance_mut": {
-		"name": "Радиоустойчивость",
-		"description": "Организм адаптируется к радиации. Медленнее накапливаете облучение.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"radiation_resist": 0.3, "radiation_heal": 0.1},
-		"requirements": {"mutation_resistance": 1},
-		"sources": [Source.RADIATION],
-		"icon": ""
+	"disease_immunity": {
+		"name": "Иммунитет к болезням",
+		"category": MutationCategory.MEDICAL,
+		"points": 35,
+		"effects": {"disease_resist": 0.8, "infection_resist": 0.7},
+		"description": "+80% сопротивление болезням"
 	},
-	
-	"cold_resistance": {
-		"name": "Морозоустойчивость",
-		"description": "Тело адаптируется к холоду. Мёрзнете медленнее.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"cold_resist": 0.4, "frost_resist": 0.3},
-		"requirements": {"mutation_resistance": 1},
-		"sources": [Source.ENVIRONMENT],
-		"icon": ""
+	"pain_immunity": {
+		"name": "Иммунитет к боли",
+		"category": MutationCategory.MEDICAL,
+		"points": 40,
+		"effects": {"pain_tolerance": 1.0, "stress_from_pain": 0},
+		"description": "Полная нечувствительность к боли"
 	},
-	
-	"heat_resistance": {
-		"name": "Жароустойчивость",
-		"description": "Тело адаптируется к жаре. Медленнее перегреваетесь.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"heat_resist": 0.4, "fire_resist": 0.2},
-		"requirements": {"mutation_resistance": 1},
-		"sources": [Source.ENVIRONMENT],
-		"icon": ""
-	},
-	
-	"water_breathing": {
-		"name": "Жабры",
-		"description": "Появляются жабры. Можно дышать под водой.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 1,
-		"effects_per_stage": {"water_breathing": true, "swim_speed": 0.3},
-		"requirements": {"mutation_resistance": 4},
-		"sources": [Source.ENVIRONMENT, Source.RITUAL],
-		"icon": ""
-	},
-	
-	"extra_arm": {
-		"name": "Дополнительная рука",
-		"description": "Вырастает дополнительная рука. Можно носить больше предметов.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 1,
-		"effects_per_stage": {"extra_slot": 2, "dual_wield": true},
-		"requirements": {"mutation_resistance": 5},
-		"sources": [Source.RITUAL],
-		"icon": ""
-	},
-	
-	"carapace": {
-		"name": "Панцирь",
-		"description": "На спине вырастает прочный панцирь. +30% к защите со спины.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"back_armor": 0.3, "melee_block": 0.15},
-		"requirements": {"mutation_resistance": 3},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
-	},
-	
-	"venom_glands": {
-		"name": "Ядовитые железы",
-		"description": "Появляются ядовитые железы. Атаки отравляют врагов.",
-		"type": Type.POSITIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"venom_damage": 10, "venom_chance": 0.2},
-		"requirements": {"mutation_resistance": 3},
-		"sources": [Source.BITE, Source.RITUAL],
-		"icon": ""
-	},
-	
-	# ============ ФИЗИЧЕСКИЕ МУТАЦИИ (ОТРИЦАТЕЛЬНЫЕ) ============
-	
-	"brittle_bones": {
-		"name": "Хрупкие кости",
-		"description": "Кости становятся хрупче. Легче получаете переломы.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"fracture_chance": 0.2, "max_health_bonus": -10},
-		"requirements": {},
-		"sources": [Source.RADIATION],
-		"icon": ""
-	},
-	
-	"muscle_degeneration": {
-		"name": "Дегенерация мышц",
-		"description": "Мышцы слабеют. -10% к урону и скорости за стадию.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"melee_damage_bonus": -0.1, "move_speed_bonus": -0.1},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
-	},
-	
-	"skin_lesions": {
-		"name": "Поражения кожи",
-		"description": "На коже появляются язвы. -10% к защите, риск инфекции.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"armor_bonus": -0.1, "infection_chance": 0.15},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.ENVIRONMENT],
-		"icon": ""
-	},
-	
-	"tremor": {
-		"name": "Тремор",
-		"description": "Руки дрожат. -15% к точности стрельбы за стадию.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"accuracy_bonus": -0.15, "craft_quality": -0.1},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
-	},
-	
-	"blindness": {
-		"name": "Слепота",
-		"description": "Зрение ухудшается. Сокращается радиус обзора.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"view_range": -0.25, "accuracy_bonus": -0.2},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.ENVIRONMENT],
-		"icon": ""
-	},
-	
-	"deafness": {
-		"name": "Глухота",
-		"description": "Слух ухудшается. Не слышите приближающихся врагов.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"hearing_range": -0.5, "detect_bonus": -0.3},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.ENVIRONMENT],
-		"icon": ""
-	},
-	
-	"nausea": {
-		"name": "Тошнота",
-		"description": "Постоянная тошнота. Еда хуже усваивается.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 2,
-		"effects_per_stage": {"food_efficiency": 0.7, "stamina_regen": -0.2},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
-	},
-	
-	"radiation_sickness": {
-		"name": "Лучевая болезнь",
-		"description": "Хроническая лучевая болезнь. Постоянная потеря здоровья.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 3,
-		"effects_per_stage": {"health_drain": 1.0, "max_health_bonus": -15},
-		"requirements": {},
-		"sources": [Source.RADIATION],
-		"icon": ""
-	},
-	
-	"zombie_virus": {
-		"name": "Вирус зомби",
-		"description": "Медленное превращение в зомби. Требует лекарства.",
-		"type": Type.NEGATIVE,
-		"category": Category.PHYSICAL,
-		"max_stage": 5,
-		"effects_per_stage": {"zombie_progress": 0.2, "humanity_loss": 0.1},
-		"requirements": {},
-		"sources": [Source.BITE],
-		"icon": ""
-	},
-	
-	"extra_eye": {
-		"name": "Лишний глаз",
-		"description": "Вырастает лишний глаз. Странно, но полезно.",
-		"type": Type.MIXED,
-		"category": Category.PHYSICAL,
-		"max_stage": 1,
-		"effects_per_stage": {"view_range": 0.2, "npc_fear": 0.3},
-		"requirements": {"mutation_resistance": 2},
-		"sources": [Source.RADIATION, Source.RITUAL],
-		"icon": ""
-	},
-	
-	"unstable_dna": {
-		"name": "Нестабильная ДНК",
-		"description": "ДНК становится нестабильной. Случайные мутации.",
-		"type": Type.MIXED,
-		"category": Category.INSTABILITY,
-		"max_stage": 3,
-		"effects_per_stage": {"random_mutation_chance": 0.1, "mutation_power": 0.2},
-		"requirements": {},
-		"sources": [Source.RADIATION],
-		"icon": ""
-	},
-	
-	# ============ МЕНТАЛЬНЫЕ МУТАЦИИ ============
-	
-	"telepathy": {
-		"name": "Телепатия",
-		"description": "Можно читать мысли существ. Знаете намерения врагов.",
-		"type": Type.POSITIVE,
-		"category": Category.PSYCHIC,
-		"max_stage": 3,
-		"effects_per_stage": {"mind_read": 0.2, "detect_intent": 0.25},
-		"requirements": {"mutation_resistance": 3},
-		"sources": [Source.RITUAL, Source.ITEM],
-		"icon": ""
-	},
-	
-	"pyrokinesis": {
-		"name": "Пирокинез",
-		"description": "Можно поджигать предметы силой мысли.",
-		"type": Type.POSITIVE,
-		"category": Category.PSYCHIC,
-		"max_stage": 3,
-		"effects_per_stage": {"fire_power": 15, "fire_range": 5},
-		"requirements": {"mutation_resistance": 4},
-		"sources": [Source.RITUAL],
-		"icon": ""
-	},
-	
-	"telekinesis": {
-		"name": "Телекинез",
-		"description": "Можно двигать предметы силой мысли.",
-		"type": Type.POSITIVE,
-		"category": Category.PSYCHIC,
-		"max_stage": 3,
-		"effects_per_stage": {"telekinesis_power": 10, "telekinesis_range": 3},
-		"requirements": {"mutation_resistance": 4},
-		"sources": [Source.RITUAL],
-		"icon": ""
-	},
-	
-	"insanity": {
-		"name": "Безумие",
-		"description": "Рассудок ухудшается. Галлюцинации, страх.",
-		"type": Type.NEGATIVE,
-		"category": Category.MENTAL,
-		"max_stage": 4,
-		"effects_per_stage": {"hallucination_chance": 0.15, "stress_rate": 0.2},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.RITUAL],
-		"icon": ""
-	},
-	
-	"paranoia_mut": {
-		"name": "Паранойя",
-		"description": "Видите угрозы где их нет. Ложные тревоги.",
-		"type": Type.NEGATIVE,
-		"category": Category.MENTAL,
-		"max_stage": 2,
-		"effects_per_stage": {"false_threats": 0.2, "stress_rate": 0.15},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
-	},
-	
-	"amnesia": {
-		"name": "Амнезия",
-		"description": "Теряете часть навыков. Забываете рецепты.",
-		"type": Type.NEGATIVE,
-		"category": Category.MENTAL,
-		"max_stage": 2,
-		"effects_per_stage": {"skill_decay": 0.1, "recipe_forget": 0.15},
-		"requirements": {},
-		"sources": [Source.RADIATION, Source.BITE],
-		"icon": ""
+	"acid_blood": {
+		"name": "Кислая кровь",
+		"category": MutationCategory.MEDICAL,
+		"points": 30,
+		"effects": {"acid_damage": 10, "acid_chance": 0.3, "bleed_resist": 0.5},
+		"description": "10 урона кислотой при кровотечении, 30% шанс"
 	}
 }
 
-# Активные мутации персонажа
-var active_mutations: Dictionary = {}  # mutation_id: stage
-var radiation_level: float = 0.0
-var mutation_resistance: int = 0
-
-func _init():
-	pass
-
-# Получить стадию мутации
-func get_mutation_stage(mutation_id: String) -> int:
-	if active_mutations.has(mutation_id):
-		return active_mutations[mutation_id]
-	return 0
-
-# Проверить наличие мутации
-func has_mutation(mutation_id: String) -> bool:
-	return active_mutations.has(mutation_id) and active_mutations[mutation_id] > 0
-
-# Получить максимальную стадию мутации
-func get_max_stage(mutation_id: String) -> int:
-	if MUTATION_DEFINITIONS.has(mutation_id):
-		return MUTATION_DEFINITIONS[mutation_id]["max_stage"]
-	return 0
-
-# Можно ли получить мутацию
-func can_gain_mutation(mutation_id: String) -> bool:
-	if not MUTATION_DEFINITIONS.has(mutation_id):
-		return false
-	
-	var mut_def = MUTATION_DEFINITIONS[mutation_id]
-	
-	# Проверяем требования
-	if mut_def.has("requirements"):
-		if mut_def["requirements"].has("mutation_resistance"):
-			if mutation_resistance < mut_def["requirements"]["mutation_resistance"]:
-				return false
-	
-	return true
-
-# Получить мутацию
-func gain_mutation(mutation_id: String, source: int = 0) -> bool:
-	if not can_gain_mutation(mutation_id):
-		return false
-	
-	if not active_mutations.has(mutation_id) or active_mutations[mutation_id] == 0:
-		active_mutations[mutation_id] = 1
-		emit_signal("mutation_gained", mutation_id)
-		print("[Mutation] Gained: %s" % MUTATION_DEFINITIONS[mutation_id]["name"])
-	elif active_mutations[mutation_id] < get_max_stage(mutation_id):
-		active_mutations[mutation_id] += 1
-		emit_signal("mutation_stage_changed", mutation_id, active_mutations[mutation_id])
-		print("[Mutation] %s advanced to stage %d" % [MUTATION_DEFINITIONS[mutation_id]["name"], active_mutations[mutation_id]])
-	
-	return true
-
-# Развить мутацию (увеличить стадию)
-func advance_mutation(mutation_id: String) -> bool:
-	if not has_mutation(mutation_id):
-		return false
-	
-	var max_stage = get_max_stage(mutation_id)
-	if active_mutations[mutation_id] < max_stage:
-		active_mutations[mutation_id] += 1
-		emit_signal("mutation_stage_changed", mutation_id, active_mutations[mutation_id])
-		return true
-	return false
-
-# Удалить мутацию
-func remove_mutation(mutation_id: String):
-	if active_mutations.has(mutation_id):
-		active_mutations.erase(mutation_id)
-		emit_signal("mutation_lost", mutation_id)
-		print("[Mutation] Lost: %s" % MUTATION_DEFINITIONS[mutation_id]["name"])
-
-# Получить эффекты мутации с учётом стадии
-func get_mutation_effects(mutation_id: String) -> Dictionary:
-	if not has_mutation(mutation_id):
-		return {}
-	
-	var mut_def = MUTATION_DEFINITIONS[mutation_id]
-	var stage = active_mutations[mutation_id]
-	var effects = {}
-	
-	if mut_def.has("effects_per_stage"):
-		for effect in mut_def["effects_per_stage"]:
-			effects[effect] = mut_def["effects_per_stage"][effect] * stage
-	
-	return effects
-
-# Получить суммарные эффекты всех мутаций
-func get_combined_effects() -> Dictionary:
-	var combined = {}
-	
-	for mutation_id in active_mutations:
-		var effects = get_mutation_effects(mutation_id)
-		for effect in effects:
-			if combined.has(effect):
-				combined[effect] += effects[effect]
-			else:
-				combined[effect] = effects[effect]
-	
-	return combined
-
-# Добавить радиацию
-func add_radiation(amount: float):
-	radiation_level += amount * (1.0 - mutation_resistance * 0.1)
-	radiation_level = max(0, radiation_level)
-	
-	# Высокая радиация может вызвать мутации
-	if radiation_level > 50:
-		_chance_for_random_mutation(Source.RADIATION)
-	
-	print("[Mutation] Radiation level: %.1f" % radiation_level)
-
-# Снизить радиацию
-func reduce_radiation(amount: float):
-	radiation_level = max(0, radiation_level - amount)
-
-# Обработка укуса зомби
-func process_bite():
-	# Вирус зомби
-	if not has_mutation("zombie_virus"):
-		gain_mutation("zombie_virus", Source.BITE)
-	else:
-		advance_mutation("zombie_virus")
-	
-	# Шанс на другие мутации от укуса
-	_chance_for_random_mutation(Source.BITE)
-
-# Шанс на случайную мутацию
-func _chance_for_random_mutation(source: int):
-	var chance = 0.1 + (radiation_level * 0.002)
-	if randf() < chance:
-		_grant_random_mutation(source)
-
-# Получить случайную мутацию
-func _grant_random_mutation(source: int):
-	var possible_mutations = []
-	
-	for mut_id in MUTATION_DEFINITIONS:
-		var mut_def = MUTATION_DEFINITIONS[mut_id]
-		
-		# Проверяем источник
-		if mut_def["sources"].has(source):
-			# Проверяем доступность
-			if can_gain_mutation(mut_id):
-				possible_mutations.append(mut_id)
-	
-	if possible_mutations.size() > 0:
-		var random_mut = possible_mutations[randi() % possible_mutations.size()]
-		gain_mutation(random_mut, source)
-
-# Получить все мутации категории
-func get_mutations_by_category(category: int) -> Array:
-	var result = []
-	for mut_id in MUTATION_DEFINITIONS:
-		if MUTATION_DEFINITIONS[mut_id]["category"] == category:
-			result.append(mut_id)
-	return result
-
-# Получить активные мутации
-func get_active_mutations() -> Array:
-	var result = []
-	for mut_id in active_mutations:
-		if active_mutations[mut_id] > 0:
-			result.append(mut_id)
-	return result
-
-# Сериализация
-func serialize() -> Dictionary:
-	return {
-		"active_mutations": active_mutations,
-		"radiation_level": radiation_level,
-		"mutation_resistance": mutation_resistance
+# Пороги мутаций (ветки)
+const MUTATION_THRESHOLDS = {
+	"beast_threshold": {
+		"name": "Звериный порог",
+		"required_category": MutationCategory.BEAST,
+		"required_points": 80,
+		"effects": {"beast_bonus": 0.3, "humanity": -20},
+		"description": "Вы становитесь ближе к зверям"
+	},
+	"plant_threshold": {
+		"name": "Растительный порог",
+		"required_category": MutationCategory.PLANT,
+		"required_points": 80,
+		"effects": {"plant_bonus": 0.3, "humanity": -20},
+		"description": "Вы становитесь ближе к растениям"
+	},
+	"bird_threshold": {
+		"name": "Птичий порог",
+		"required_category": MutationCategory.BIRD,
+		"required_points": 60,
+		"effects": {"bird_bonus": 0.3, "humanity": -15},
+		"description": "Вы становитесь ближе к птицам"
+	},
+	"reptile_threshold": {
+		"name": "Рептильий порог",
+		"required_category": MutationCategory.REPTILE,
+		"required_points": 80,
+		"effects": {"reptile_bonus": 0.3, "humanity": -20},
+		"description": "Вы становитесь ближе к рептилиям"
+	},
+	"insect_threshold": {
+		"name": "Насекомый порог",
+		"required_category": MutationCategory.INSECT,
+		"required_points": 80,
+		"effects": {"insect_bonus": 0.3, "humanity": -25},
+		"description": "Вы становитесь ближе к насекомым"
+	},
+	"chimera_threshold": {
+		"name": "Химерный порог",
+		"required_categories": 3,
+		"required_points": 150,
+		"effects": {"chimera_bonus": 0.5, "humanity": -40},
+		"description": "Вы химера - смесь всех видов"
 	}
+}
 
-# Десериализация
-func deserialize(data: Dictionary):
-	active_mutations = data.get("active_mutations", {})
-	radiation_level = data.get("radiation_level", 0.0)
-	mutation_resistance = data.get("mutation_resistance", 0)
+func add_mutation(mutation_id: String) -> bool:
+	if mutations.has(mutation_id):
+		return false
+	
+	var data = MUTATION_CATALOG.get(mutation_id, {})
+	if data.is_empty():
+		return false
+	
+	mutations.append(mutation_id)
+	mutation_points += data.get("points", 0)
+	
+	emit_signal("mutation_gained", mutation_id)
+	_check_thresholds()
+	
+	return true
+
+func remove_mutation(mutation_id: String):
+	if mutations.has(mutation_id):
+		var data = MUTATION_CATALOG.get(mutation_id, {})
+		mutation_points -= data.get("points", 0)
+		mutations.erase(mutation_id)
+		emit_signal("mutation_lost", mutation_id)
+
+func has_mutation(mutation_id: String) -> bool:
+	return mutations.has(mutation_id)
+
+func get_mutations_by_category(category: MutationCategory) -> Array:
+	var result = []
+	for mutation_id in mutations:
+		var data = MUTATION_CATALOG.get(mutation_id, {})
+		if data.get("category", -1) == category:
+			result.append(mutation_id)
+	return result
+
+func get_category_points(category: MutationCategory) -> float:
+	var points = 0.0
+	for mutation_id in get_mutations_by_category(category):
+		points += MUTATION_CATALOG[mutation_id].get("points", 0)
+	return points
+
+func _check_thresholds():
+	for threshold_id in MUTATION_THRESHOLDS:
+		if thresholds_reached.has(threshold_id):
+			continue
+		
+		var threshold = MUTATION_THRESHOLDS[threshold_id]
+		var category = threshold.get("required_category", -1)
+		var required_points = threshold.get("required_points", 999)
+		
+		if category >= 0 and get_category_points(category) >= required_points:
+			thresholds_reached.append(threshold_id)
+			emit_signal("threshold_reached", threshold_id)
+
+func get_all_effects() -> Dictionary:
+	var effects = {}
+	for mutation_id in mutations:
+		var data = MUTATION_CATALOG.get(mutation_id, {})
+		for effect in data.get("effects", {}):
+			effects[effect] = effects.get(effect, 0) + data["effects"][effect]
+	return effects

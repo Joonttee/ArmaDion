@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[node name="AudioManager" type="Node"]
+script = ExtResource("res://scripts/audio/audio_manager.gd")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Music"
+
+[node name="AmbientPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Ambient"
+
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
+bus = "SFX"
+
+[node name="UIPlayer" type="AudioStreamPlayer" parent="."]
+bus = "UI"

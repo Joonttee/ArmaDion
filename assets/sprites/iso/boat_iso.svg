@@ -1,0 +1,10 @@
+<svg width="64" height="48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Boat hull -->
+  <path d="M8 24 L16 36 L48 36 L56 24 Z" fill="#ecf0f1"/>
+  <path d="M12 24 L16 32 L48 32 L52 24 Z" fill="#bdc3c7"/>
+  <!-- Trim -->
+  <rect x="16" y="20" width="32" height="4" fill="#3498db"/>
+  <!-- Motor -->
+  <rect x="44" y="28" width="12" height="8" fill="#2c3e50"/>
+  <rect x="52" y="24" width="4" height="12" fill="#34495e"/>
+</svg>

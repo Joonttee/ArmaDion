@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/furniture/furniture.gd" id="1_furniture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_furniture"]
+size = Vector2(32, 32)
+
+[node name="Furniture" type="Node2D"]
+script = ExtResource("1_furniture")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="InteractionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Furniture/InteractionArea"]
+shape = SubResource("RectangleShape2D_furniture")

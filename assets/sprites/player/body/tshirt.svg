@@ -1,0 +1,6 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- T-Shirt -->
+  <path d="M20 24 L24 20 L40 20 L44 24 L44 48 L20 48 Z" fill="#ecf0f1"/>
+  <path d="M24 20 L32 16 L40 20" fill="#bdc3c7"/>
+  <rect x="28" y="24" width="8" height="12" fill="#e74c3c" opacity="0.3"/>
+</svg>

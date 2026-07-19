@@ -1,0 +1,9 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Explorer backpack -->
+  <rect x="4" y="2" width="24" height="26" rx="3" fill="#8B4513"/>
+  <rect x="6" y="4" width="20" height="8" fill="#A0522D"/>
+  <rect x="6" y="14" width="20" height="12" fill="#A0522D"/>
+  <rect x="8" y="0" width="16" height="4" rx="1" fill="#5D3A1A"/>
+  <rect x="10" y="24" width="12" height="4" fill="#6B4423"/>
+  <rect x="14" y="6" width="4" height="4" fill="#DAA520"/>
+</svg>

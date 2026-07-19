@@ -316,6 +316,200 @@ func _load_default_items():
 		"stackable": true,
 		"max_stack": 5
 	})
+	
+	# === СУМКИ ===
+	_add_item("small_backpack", {
+		"item_name": "Малая сумка",
+		"description": "Небольшая сумка для дополнительных припасов. +4 слота.",
+		"weight": 0.5,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 4,
+		"weight_reduction": 0.05
+	})
+	
+	_add_item("backpack", {
+		"item_name": "Рюкзак",
+		"description": "Стандартный туристический рюкзак. +8 слотов.",
+		"weight": 1.0,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 8,
+		"weight_reduction": 0.10
+	})
+	
+	_add_item("large_backpack", {
+		"item_name": "Большой рюкзак",
+		"description": "Вместительный рюкзак для длительных походов. +12 слотов.",
+		"weight": 1.5,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 12,
+		"weight_reduction": 0.15
+	})
+	
+	_add_item("satchel", {
+		"item_name": "Сумка через плечо",
+		"description": "Удобная сумка для быстрого доступа. +6 слотов.",
+		"weight": 0.3,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 6,
+		"weight_reduction": 0.0
+	})
+	
+	_add_item("duffel_bag", {
+		"item_name": "Вещмешок",
+		"description": "Прочный мешок для снаряжения. +10 слотов.",
+		"weight": 0.8,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 10,
+		"weight_reduction": 0.10
+	})
+	
+	_add_item("military_backpack", {
+		"item_name": "Военный рюкзак",
+		"description": "Прочный рюкзак с множеством карманов. +16 слотов.",
+		"weight": 2.0,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 16,
+		"weight_reduction": 0.20
+	})
+	
+	# === ДОПОЛНИТЕЛЬНЫЕ СУМКИ ===
+	_add_item("belt_pouch", {
+		"item_name": "Поясная сумка",
+		"description": "Небольшая сумка на поясе для мелочей. +2 слота.",
+		"weight": 0.2,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 2,
+		"weight_reduction": 0.0
+	})
+	
+	_add_item("holster", {
+		"item_name": "Кобура",
+		"description": "Кобура для оружия. +1 слот для оружия.",
+		"weight": 0.3,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 1,
+		"weight_reduction": 0.0
+	})
+	
+	_add_item("quiver", {
+		"item_name": "Колчан",
+		"description": "Колчан для стрел. +3 слота для боеприпасов.",
+		"weight": 0.4,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 3,
+		"weight_reduction": 0.0
+	})
+	
+	_add_item("medical_bag", {
+		"item_name": "Медицинская сумка",
+		"description": "Сумка для медикаментов. +4 слота, лучшие бинты.",
+		"weight": 0.6,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 4,
+		"weight_reduction": 0.05
+	})
+	
+	_add_item("tool_belt", {
+		"item_name": "Пояс для инструментов",
+		"description": "Пояс с карманами для инструментов. +3 слота.",
+		"weight": 0.7,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 3,
+		"weight_reduction": 0.0
+	})
+	
+	_add_item("ammo_pouch", {
+		"item_name": "Подсумок",
+		"description": "Подсумок для боеприпасов. +5 слотов для патронов.",
+		"weight": 0.5,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 5,
+		"weight_reduction": 0.0
+	})
+	
+	# === СПЕЦИАЛЬНЫЕ СУМКИ ===
+	_add_item("explorer_backpack", {
+		"item_name": "Рюкзак исследователя",
+		"description": "Прочный рюкзак для долгих экспедиций. +14 слотов, -12% веса.",
+		"weight": 1.8,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 14,
+		"weight_reduction": 0.12
+	})
+	
+	_add_item("hiking_backpack", {
+		"item_name": "Туристический рюкзак",
+		"description": "Лёгкий рюкзак для походов. +10 слотов, -8% веса.",
+		"weight": 1.2,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 10,
+		"weight_reduction": 0.08
+	})
+	
+	_add_item("tactical_vest", {
+		"item_name": "Тактический жилет",
+		"description": "Жилет с множеством карманов. +8 слотов, быстрый доступ.",
+		"weight": 1.5,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 8,
+		"weight_reduction": 0.05
+	})
+	
+	_add_item("messenger_bag", {
+		"item_name": "Сумка курьера",
+		"description": "Удобная сумка для документов и мелочей. +5 слотов.",
+		"weight": 0.4,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 5,
+		"weight_reduction": 0.0
+	})
+	
+	_add_item("suitcase", {
+		"item_name": "Чемодан",
+		"description": "Прочный чемодан для ценных вещей. +7 слотов, защита содержимого.",
+		"weight": 1.0,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 7,
+		"weight_reduction": 0.05
+	})
+	
+	# === РЕДКИЕ СУМКИ ===
+	_add_item("adventure_backpack", {
+		"item_name": "Рюкзак авантюриста",
+		"description": "Легендарный рюкзак с магией хранения. +20 слотов, -25% веса.",
+		"weight": 2.5,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 20,
+		"weight_reduction": 0.25
+	})
+	
+	_add_item("invisible_bag", {
+		"item_name": "Невидимая сумка",
+		"description": "Зачарованная сумка, невидимая для других. +12 слотов.",
+		"weight": 0.1,
+		"item_type": Item.ItemType.MISC,
+		"is_bag": true,
+		"slots_bonus": 12,
+		"weight_reduction": 0.30
+	})
 
 func _add_item(id: String, data: Dictionary):
 	var item = Item.new()

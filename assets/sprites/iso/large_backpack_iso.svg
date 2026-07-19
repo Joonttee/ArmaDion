@@ -1,0 +1,8 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Large backpack -->
+  <rect x="4" y="0" width="24" height="28" rx="4" fill="#5D6d3a"/>
+  <rect x="6" y="2" width="20" height="12" fill="#4a5a2f"/>
+  <rect x="6" y="16" width="20" height="10" fill="#4a5a2f"/>
+  <rect x="10" y="26" width="12" height="4" fill="#3d4d26"/>
+  <rect x="14" y="0" width="4" height="6" fill="#7f8c5a"/>
+</svg>

@@ -1,0 +1,78 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/vehicle/vehicle_repair_ui.gd" id="1_repair_ui"]
+
+[node name="VehicleRepairUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_repair_ui")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 30.0
+theme_override_font_sizes/font_size = 20
+text = "РЕМОНТ И УЛУЧШЕНИЯ"
+alignment = 1
+
+[node name="VehicleInfo" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 600.0
+offset_bottom = 55.0
+text = "Транспорт"
+
+[node name="HealthBar" type="ProgressBar" parent="Panel"]
+layout_mode = 0
+offset_top = 60.0
+offset_right = 600.0
+offset_bottom = 80.0
+max_value = 100.0
+value = 100.0
+
+[node name="RepairLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 90.0
+offset_right = 600.0
+offset_bottom = 110.0
+text = "Ремонт:"
+
+[node name="RepairButtons" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_top = 115.0
+offset_right = 600.0
+offset_bottom = 200.0
+
+[node name="UpgradeLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 210.0
+offset_right = 600.0
+offset_bottom = 230.0
+text = "Улучшения:"
+
+[node name="UpgradeButtons" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_top = 235.0
+offset_right = 600.0
+offset_bottom = 400.0
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 420.0
+offset_right = 380.0
+offset_bottom = 460.0
+text = "Закрыть"

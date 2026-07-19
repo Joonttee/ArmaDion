@@ -1,13 +1,15 @@
 extends CharacterBody2D
 class_name Zombie
 
-# Zombie - искусственный интеллект зомби
-# Поведение: патрулирование, преследование игрока, атака
-
-enum State { IDLE, WANDER, CHASE, ATTACK, DEAD }
+# Zombie - оптимизированный ИИ зомби
 
 signal died(zombie)
+signal zombie_alerted(position)
 
+enum State { IDLE, WANDER, CHASE, ATTACK, DEAD }
+enum ZombieType { NORMAL, RUNNER, TANK, SPITTER, SCREAMER }
+
+@export var zombie_type: ZombieType = ZombieType.NORMAL
 @export var max_health: float = 50.0
 @export var move_speed: float = 60.0
 @export var chase_speed: float = 100.0
@@ -23,16 +25,53 @@ var wander_target: Vector2 = Vector2.ZERO
 var last_attack_time: float = 0.0
 var wander_timer: float = 0.0
 
+# Модификаторы
+var time_speed_modifier: float = 1.0
+var time_detection_modifier: float = 1.0
+var weather_speed_modifier: float = 1.0
+
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var attack_area: Area2D = $AttackArea
 @onready var detection_area: Area2D = $DetectionArea
 
 func _ready():
+	_setup_zombie_type()
 	health = max_health
 	add_to_group("zombies")
 	_change_state(State.IDLE)
-	print("[Zombie] Zombie spawned")
+
+func _setup_zombie_type():
+	match zombie_type:
+		ZombieType.NORMAL:
+			pass  # Значения по умолчанию
+		ZombieType.RUNNER:
+			max_health = 30.0
+			move_speed = 120.0
+			chase_speed = 180.0
+			modulate = Color(0.8, 0.9, 0.8)
+		ZombieType.TANK:
+			max_health = 150.0
+			move_speed = 40.0
+			chase_speed = 60.0
+			attack_damage = 25.0
+			attack_range = 50.0
+			modulate = Color(0.6, 0.6, 0.6)
+			scale = Vector2(1.3, 1.3)
+		ZombieType.SPITTER:
+			max_health = 40.0
+			move_speed = 50.0
+			chase_speed = 80.0
+			attack_damage = 15.0
+			attack_range = 120.0
+			detection_range = 250.0
+			modulate = Color(0.7, 1.0, 0.7)
+		ZombieType.SCREAMER:
+			max_health = 35.0
+			move_speed = 70.0
+			chase_speed = 110.0
+			detection_range = 300.0
+			modulate = Color(1.0, 0.7, 1.0)
 
 func _physics_process(delta):
 	if current_state == State.DEAD:
@@ -45,15 +84,16 @@ func _physics_process(delta):
 
 func _update_state(delta):
 	var player = GameManager.player
-	if player == null:
+	if not player:
 		_change_state(State.IDLE)
 		return
 	
-	var distance_to_player = global_position.distance_to(player.global_position)
+	var distance = global_position.distance_to(player.global_position)
+	var effective_detection = detection_range * time_detection_modifier
 	
 	match current_state:
 		State.IDLE:
-			if distance_to_player < detection_range:
+			if distance < effective_detection:
 				_change_state(State.CHASE)
 			else:
 				wander_timer += delta
@@ -61,23 +101,25 @@ func _update_state(delta):
 					_change_state(State.WANDER)
 		
 		State.WANDER:
-			if distance_to_player < detection_range:
+			if distance < effective_detection:
 				_change_state(State.CHASE)
 			elif global_position.distance_to(wander_target) < 10.0:
 				wander_timer = 0.0
 				_change_state(State.IDLE)
 		
 		State.CHASE:
-			if distance_to_player <= attack_range:
+			if distance <= attack_range:
 				_change_state(State.ATTACK)
-			elif distance_to_player > detection_range * 1.5:
+			elif distance > effective_detection * 1.5:
 				_change_state(State.IDLE)
 		
 		State.ATTACK:
-			if distance_to_player > attack_range * 1.2:
+			if distance > attack_range * 1.2:
 				_change_state(State.CHASE)
 
 func _execute_state(delta):
+	var speed_mod = time_speed_modifier * weather_speed_modifier
+	
 	match current_state:
 		State.IDLE:
 			velocity = Vector2.ZERO
@@ -85,13 +127,11 @@ func _execute_state(delta):
 		State.WANDER:
 			if wander_target == Vector2.ZERO:
 				_pick_wander_target()
-			var direction = (wander_target - global_position).normalized()
-			velocity = direction * (move_speed * 0.5)
+			velocity = (wander_target - global_position).normalized() * (move_speed * 0.5 * speed_mod)
 		
 		State.CHASE:
 			if target:
-				var direction = (target.global_position - global_position).normalized()
-				velocity = direction * chase_speed
+				velocity = (target.global_position - global_position).normalized() * chase_speed * speed_mod
 			else:
 				velocity = Vector2.ZERO
 		
@@ -100,29 +140,42 @@ func _execute_state(delta):
 			_try_attack()
 
 func _pick_wander_target():
-	var random_offset = Vector2(
-		randi() % 200 - 100,
-		randi() % 200 - 100
-	)
-	wander_target = global_position + random_offset
+	wander_target = global_position + Vector2(randi() % 200 - 100, randi() % 200 - 100)
 
 func _try_attack():
-	var current_time = Time.get_time_dict_from_system().second
-	if current_time - last_attack_time < attack_cooldown:
+	if Time.get_time_dict_from_system().second - last_attack_time < attack_cooldown:
 		return
 	
-	last_attack_time = current_time
+	last_attack_time = Time.get_time_dict_from_system().second
 	
-	# Анимация атаки
-	if animation_player and animation_player.has_animation("attack"):
+	if animation_player:
 		animation_player.play("attack")
 	
-	# Нанесение урона игроку
 	var player = GameManager.player
-	if player and player.global_position.distance_to(global_position) <= attack_range:
-		player._take_damage(attack_damage)
-		EventManager.emit_signal("zombie_attacked", self, player)
-		print("[Zombie] Hit player for %.1f damage" % attack_damage)
+	if not player:
+		return
+	
+	var distance = player.global_position.distance_to(global_position)
+	
+	match zombie_type:
+		ZombieType.SPITTER:
+			if distance <= attack_range:
+				player._take_damage(attack_damage)
+				EventManager.emit_signal("zombie_attacked", self, player)
+		ZombieType.SCREAMER:
+			_alert_nearby_zombies()
+			if distance <= attack_range:
+				player._take_damage(attack_damage)
+		_:
+			if distance <= attack_range:
+				player._take_damage(attack_damage)
+				EventManager.emit_signal("zombie_attacked", self, player)
+
+func _alert_nearby_zombies():
+	for zombie in get_tree().get_nodes_in_group("zombies"):
+		if zombie != self and zombie.global_position.distance_to(global_position) < 200:
+			if zombie.current_state in [State.IDLE, State.WANDER]:
+				zombie._change_state(State.CHASE)
 
 func _change_state(new_state: State):
 	if current_state == new_state:
@@ -133,43 +186,37 @@ func _change_state(new_state: State):
 	match new_state:
 		State.CHASE:
 			target = GameManager.player
-			EventManager.emit_signal("zombie_alerted", global_position)
+			emit_signal("zombie_alerted", global_position)
 		State.WANDER:
 			_pick_wander_target()
 		State.IDLE:
 			wander_target = Vector2.ZERO
-		State.ATTACK:
-			pass
 
 func take_damage(amount: float):
 	if current_state == State.DEAD:
 		return
 	
 	health -= amount
-	print("[Zombie] Took %.1f damage, health: %.1f" % [amount, health])
 	
-	# Зомби всегда переходит в состояние преследования при получении урона
-	if current_state != State.CHASE and current_state != State.ATTACK:
+	if current_state not in [State.CHASE, State.ATTACK]:
 		_change_state(State.CHASE)
 	
 	if health <= 0:
 		_die()
 
 func _die():
-	_change_state(State.DEAD)
+	current_state = State.DEAD
 	emit_signal("died", self)
 	EventManager.emit_signal("zombie_died", self)
-	print("[Zombie] Zombie died")
 	
-	# Удаление после анимации
-	if animation_player and animation_player.has_animation("die"):
+	if animation_player:
 		animation_player.play("die")
 		await animation_player.animation_finished
 	
 	queue_free()
 
 func _update_animation():
-	if animation_player == null or current_state == State.DEAD:
+	if not animation_player or current_state == State.DEAD:
 		return
 	
 	match current_state:
@@ -177,5 +224,13 @@ func _update_animation():
 			animation_player.play("idle")
 		State.WANDER, State.CHASE:
 			animation_player.play("walk")
-		State.ATTACK:
-			pass  # Анимация атаки вызывается отдельно
+
+func update_time_modifiers(modifiers: Dictionary):
+	time_speed_modifier = modifiers.get("speed", 1.0)
+	time_detection_modifier = modifiers.get("detection", 1.0)
+
+func update_weather_modifier(speed_mod: float):
+	weather_speed_modifier = speed_mod
+
+func get_type() -> ZombieType:
+	return zombie_type

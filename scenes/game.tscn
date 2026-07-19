@@ -1,0 +1,23 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/game_flow_manager.gd" id="1_flow"]
+[ext_resource type="PackedScene" uid="uid://c8yvgf0qmk8v0" path="res://scenes/ui/menu/main_menu.tscn" id="2_menu"]
+[ext_resource type="Script" path="res://scripts/world/generation/world_generator.gd" id="3_world"]
+[ext_resource type="PackedScene" uid="uid://pause01" path="res://scenes/ui/menu/pause_menu.tscn" id="4_pause"]
+[ext_resource type="PackedScene" uid="uid://settings01" path="res://scenes/ui/settings/settings_menu.tscn" id="5_settings"]
+[ext_resource type="PackedScene" uid="uid://gameover01" path="res://scenes/ui/menu/game_over_screen.tscn" id="6_gameover"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_flow")
+
+[node name="MainMenu" parent="." instance=PackedScene("res://scenes/ui/menu/main_menu.tscn")]
+
+[node name="GameWorld" type="Node2D" parent="."]
+visible = false
+script = ExtResource("3_world")
+
+[node name="PauseMenu" parent="." instance=PackedScene("res://scenes/ui/menu/pause_menu.tscn")]
+
+[node name="SettingsMenu" parent="." instance=PackedScene("res://scenes/ui/settings/settings_menu.tscn")]
+
+[node name="GameOverScreen" parent="." instance=PackedScene("res://scenes/ui/menu/game_over_screen.tscn")]

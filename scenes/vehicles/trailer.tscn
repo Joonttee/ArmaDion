@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/vehicles/trailer.gd" id="1_trailer"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trailer"]
+size = Vector2(80, 40)
+
+[node name="Trailer" type="CharacterBody2D"]
+script = ExtResource("1_trailer")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_trailer")

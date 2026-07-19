@@ -1,0 +1,7 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Military Helmet -->
+  <ellipse cx="32" cy="14" rx="14" ry="10" fill="#5D6d3a"/>
+  <path d="M18 14 Q32 4, 46 14" fill="#4a5a2a"/>
+  <rect x="22" y="10" width="20" height="8" fill="#3d4d26"/>
+  <ellipse cx="32" cy="8" rx="8" ry="3" fill="#6B8E23"/>
+</svg>

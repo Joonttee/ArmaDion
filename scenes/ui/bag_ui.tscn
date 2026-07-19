@@ -1,0 +1,76 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/inventory/bag_ui.gd" id="1_bag_ui"]
+
+[node name="BagUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_bag_ui")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 30.0
+theme_override_font_sizes/font_size = 20
+text = "УПРАВЛЕНИЕ СУМКОЙ"
+alignment = 1
+
+[node name="BagIcon" type="TextureRect" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 40.0
+offset_right = 60.0
+offset_bottom = 80.0
+
+[node name="BagNameLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 40.0
+offset_right = 380.0
+offset_bottom = 60.0
+text = "Сумка не экипирована"
+
+[node name="BagStatsLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 60.0
+offset_right = 380.0
+offset_bottom = 80.0
+text = "Базовый инвентарь"
+
+[node name="UnequipButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 90.0
+offset_right = 150.0
+offset_bottom = 120.0
+text = "Снять сумку"
+
+[node name="AvailableLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 130.0
+offset_right = 380.0
+offset_bottom = 150.0
+text = "Доступные сумки:"
+
+[node name="AvailableBags" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 160.0
+offset_right = 380.0
+offset_bottom = 280.0
+columns = 3

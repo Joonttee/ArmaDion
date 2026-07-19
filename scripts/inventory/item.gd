@@ -60,3 +60,19 @@ func deserialize(data: Dictionary):
 	item_id = data.get("item_id", "")
 	item_name = data.get("item_name", "Unknown")
 	current_stack = data.get("current_stack", 1)
+
+func get_slot() -> int:
+	# Default slot based on item type
+	match item_type:
+		ItemType.WEAPON: return 6  # WEAPON slot
+		ItemType.MATERIAL: return 5  # ACCESSORY slot
+		_: return 5  # ACCESSORY slot as default
+
+func get_defense() -> float:
+	return 0.0
+
+func get_warmth() -> float:
+	return 0.0
+
+func get_sprite_path() -> String:
+	return ""

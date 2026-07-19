@@ -1,0 +1,7 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hoodie -->
+  <path d="M18 24 L22 18 L42 18 L46 24 L46 50 L18 50 Z" fill="#7f8c8d"/>
+  <path d="M22 18 L32 14 L42 18" fill="#6c7a7a"/>
+  <ellipse cx="32" cy="22" rx="10" ry="6" fill="#95a5a6"/>
+  <rect x="26" y="34" width="12" height="10" rx="2" fill="#6c7a7a"/>
+</svg>

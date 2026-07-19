@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/vehicle/vehicle_trunk_ui.gd" id="1_trunk_ui"]
+
+[node name="VehicleTrunkUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_trunk_ui")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 30.0
+theme_override_font_sizes/font_size = 20
+text = "БАГАЖНИК"
+alignment = 1
+
+[node name="VehicleInfo" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 600.0
+offset_bottom = 55.0
+text = "Информация о транспорте"
+
+[node name="TrunkLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 65.0
+offset_right = 300.0
+offset_bottom = 85.0
+text = "Багажник:"
+
+[node name="TrunkGrid" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_top = 90.0
+offset_right = 280.0
+offset_bottom = 300.0
+columns = 4
+
+[node name="PlayerLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 65.0
+offset_right = 600.0
+offset_bottom = 85.0
+text = "Инвентарь:"
+
+[node name="PlayerGrid" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 90.0
+offset_right = 600.0
+offset_bottom = 300.0
+columns = 4
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 320.0
+offset_right = 380.0
+offset_bottom = 360.0
+text = "Закрыть"

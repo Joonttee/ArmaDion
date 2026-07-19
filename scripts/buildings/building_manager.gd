@@ -1,5 +1,4 @@
 extends Node
-class_name BuildingManager
 
 # BuildingManager - менеджер строительства
 # Управляет размещением и строительством объектов базы
@@ -147,7 +146,7 @@ func _input(event):
 
 func _on_piece_destroyed(piece: BuildingPiece):
 	placed_pieces.erase(piece)
-	emit_signal("piece_destroyed(piece)
+	emit_signal("piece_destroyed", piece)
 
 func get_pieces_in_radius(position: Vector2, radius: float) -> Array[BuildingPiece]:
 	var pieces: Array[BuildingPiece] = []
@@ -162,13 +161,13 @@ func get_total_health() -> float:
 		total += piece.health
 	return total
 
-func serialize() -> Dictionary:
+func serialize_data() -> Dictionary:
 	var data = []
 	for piece in placed_pieces:
 		data.append(piece.serialize())
 	return {"pieces": data}
 
-func deserialize(data: Dictionary):
+func deserialize_data(data: Dictionary):
 	# Очищаем существующие объекты
 	for piece in placed_pieces:
 		piece.queue_free()

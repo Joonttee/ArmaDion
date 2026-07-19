@@ -1,0 +1,8 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Armor Plate -->
+  <path d="M16 24 L20 16 L44 16 L48 24 L48 50 L16 50 Z" fill="#7f8c8d"/>
+  <path d="M20 16 L32 12 L44 16" fill="#95a5a6"/>
+  <rect x="22" y="24" width="20" height="24" rx="2" fill="#34495e"/>
+  <rect x="24" y="26" width="16" height="20" fill="#2c3e50"/>
+  <circle cx="32" cy="36" r="4" fill="#95a5a6"/>
+</svg>

@@ -1,0 +1,93 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/menu/main_menu.gd" id="1_menu"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 200.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 48
+text = "ARMADION"
+alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 80.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 16
+text = "Выживай любой ценой"
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 130.0
+offset_right = 350.0
+offset_bottom = 350.0
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Продолжить"
+
+[node name="NewGameButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Новая игра"
+
+[node name="LoadGameButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Загрузить игру"
+
+[node name="SettingsButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Настройки"
+
+[node name="QuitButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Выход"
+
+[node name="VersionLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 360.0
+offset_right = 400.0
+offset_bottom = 380.0
+text = "v0.2.0 Alpha"
+alignment = 2
+
+[node name="SaveLoadUI" type="Control" parent="."]
+script = ExtResource("res://scripts/ui/menu/save_load_ui.gd")
+
+[node name="SettingsMenu" type="Control" parent="."]
+script = ExtResource("res://scripts/ui/settings/settings_menu.gd")
